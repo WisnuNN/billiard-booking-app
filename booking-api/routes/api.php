@@ -8,6 +8,30 @@ use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\ReportController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/health-check', function () {
+    try {
+        \Illuminate\Support\Facades\DB::connection()->getPdo();
+        $tables = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
+        return response()->json([
+            'status' => 'ok',
+            'database' => 'connected',
+            'tables_count' => count($tables),
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'status' => 'error',
+            'database' => 'connection_failed',
+            'error_message' => $e->getMessage(),
+            'db_config' => [
+                'host' => config('database.connections.mysql.host'),
+                'port' => config('database.connections.mysql.port'),
+                'database' => config('database.connections.mysql.database'),
+                'username' => config('database.connections.mysql.username'),
+            ]
+        ], 500);
+    }
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 

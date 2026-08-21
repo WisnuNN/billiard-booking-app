@@ -17,14 +17,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        env('FRONTEND_URL', 'http://localhost:5173'),
-    ],
+    'allowed_origins' => ['*'],
 
-    'allowed_origins_patterns' => [
-        // Allow all Vercel preview deployments
-        '#^https://.*\.vercel\.app$#',
-    ],
+    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
@@ -32,6 +27,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 
 ];
