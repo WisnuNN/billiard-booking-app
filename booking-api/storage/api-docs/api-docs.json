@@ -1,0 +1,2212 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Booking Billiard API",
+        "description": "Welcome to the official **Booking Billiard API** documentation.\n\nThis API provides an enterprise-grade backend infrastructure designed to streamline and automate billiard center operations. Built with a focus on high performance, security, and scalability, it serves as the core engine for modern booking applications.\n\n### Core Capabilities:\n- **Secure Authentication**: Robust role-based access control (RBAC) powered by Laravel Sanctum, ensuring data privacy and operational security.\n- **Resource Management**: Dynamic and highly configurable table allocation, capacity planning, and scheduling algorithms.\n- **Advanced Reservation System**: Sophisticated booking engine capable of handling future reservations, real-time availability conflict resolution, and instant walk-in assignments.\n- **Transaction Architecture**: Seamless and transactional payment state management, ensuring financial data integrity.\n- **Analytics & Telemetry**: Comprehensive real-time monitoring of table states and data-driven reporting for business intelligence.\n\n---\n\n*Architected and developed by **Wisnu Nugraha**.*",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a new user",
+                "operationId": "8e4e3cb7b46126f4696379d3c7eeb4ad",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registrasi berhasil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/UserResource"
+                                                },
+                                                "token": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login to the application",
+                "operationId": "222b2625838e3c57e017987f73598fda",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login berhasil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/UserResource"
+                                                },
+                                                "token": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email atau password salah."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout the current user",
+                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
+                "responses": {
+                    "200": {
+                        "description": "Successful logout",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout berhasil."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/profile": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get user profile",
+                "operationId": "94a5f4c5f5e5755cf43698cf9bc49e9d",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get list of bookings",
+                "operationId": "4535e967ef15bc76dadf1efa40192f0d",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "table_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BookingResource"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "limit": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Create a new booking",
+                "operationId": "43e6dcca842886074084b8db86af7802",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_id",
+                                    "booking_date",
+                                    "start_time",
+                                    "end_time"
+                                ],
+                                "properties": {
+                                    "table_id": {
+                                        "type": "integer"
+                                    },
+                                    "booking_date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "start_time": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "end_time": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "notes": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking berhasil dibuat. Menunggu konfirmasi admin."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookingResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{id}": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get booking information",
+                "operationId": "c383a28985575aa1a16f783b2f762554",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookingResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Delete a booking/transaction",
+                "operationId": "a53474f63d3a2fe2275fc0b6c8cc16cb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking berhasil dihapus."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{id}/cancel": {
+            "patch": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Cancel a booking",
+                "operationId": "846ff9bd9fa2285d6023404918c6234c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking berhasil dibatalkan."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookingResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{id}/pay": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Process payment for a booking (Customer)",
+                "operationId": "19697eb849da07cec21b1f121626cb0c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Pembayaran berhasil diproses."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookingResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{id}/confirm": {
+            "patch": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Confirm a pending booking (Admin)",
+                "operationId": "fc808ef669ad67bac6511e340fc62492",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking berhasil dikonfirmasi."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookingResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{id}/complete": {
+            "patch": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Complete a booking (Admin)",
+                "operationId": "74086ccde8577d5444bc4f235e4285be",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking berhasil diselesaikan."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookingResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/walk-in": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Create a walk-in booking (Admin)",
+                "operationId": "6215f483b5eaad7e11555967be588583",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_id",
+                                    "duration_hours",
+                                    "customer_name"
+                                ],
+                                "properties": {
+                                    "table_id": {
+                                        "type": "integer"
+                                    },
+                                    "duration_hours": {
+                                        "type": "number"
+                                    },
+                                    "customer_name": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Booking Walk-in berhasil dibuat."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BookingResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/bookings/{id}/ticket": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get booking e-ticket",
+                "operationId": "630e5d303d6032762cc42f601a32efd8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "E-Ticket berhasil diambil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "booking_code": {
+                                                    "type": "string"
+                                                },
+                                                "customer_name": {
+                                                    "type": "string"
+                                                },
+                                                "table_name": {
+                                                    "type": "string"
+                                                },
+                                                "booking_date": {
+                                                    "type": "string"
+                                                },
+                                                "start_time": {
+                                                    "type": "string"
+                                                },
+                                                "end_time": {
+                                                    "type": "string"
+                                                },
+                                                "duration": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                },
+                                                "total_price": {
+                                                    "type": "number"
+                                                },
+                                                "qr_data": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/bestsellers": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get most booked tables (Admin)",
+                "operationId": "a2f646f723c82ca701afea2f55b5e905",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "table": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "total_bookings": {
+                                                        "type": "integer"
+                                                    },
+                                                    "total_revenue": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/busiest-schedules": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get busiest schedules (Admin)",
+                "operationId": "e79159f327d8991cf322569586b095a9",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "day_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "start_time": {
+                                                        "type": "string",
+                                                        "format": "time"
+                                                    },
+                                                    "total_bookings": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tables/{table}/schedules": {
+            "get": {
+                "tags": [
+                    "Schedules"
+                ],
+                "summary": "Get schedules for a table",
+                "operationId": "32f0dbcf6f0fa7f3d9eee6478bb20619",
+                "parameters": [
+                    {
+                        "name": "table",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ScheduleResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Schedules"
+                ],
+                "summary": "Add a new schedule to a table (Admin)",
+                "operationId": "4bcf60d4bc0c1446e17c3a51a71d6943",
+                "parameters": [
+                    {
+                        "name": "table",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "day_of_week",
+                                    "open_time",
+                                    "close_time"
+                                ],
+                                "properties": {
+                                    "day_of_week": {
+                                        "type": "integer"
+                                    },
+                                    "open_time": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "close_time": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "is_available": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Jadwal berhasil ditambahkan."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ScheduleResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error or duplicate schedule"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tables/{table}/schedules/{schedule}": {
+            "put": {
+                "tags": [
+                    "Schedules"
+                ],
+                "summary": "Update a schedule (Admin)",
+                "operationId": "3c0d12dac3afdc5bc89075b9bc3e1b08",
+                "parameters": [
+                    {
+                        "name": "table",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "schedule",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "day_of_week": {
+                                        "type": "integer"
+                                    },
+                                    "open_time": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "close_time": {
+                                        "type": "string",
+                                        "format": "time"
+                                    },
+                                    "is_available": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Jadwal berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/ScheduleResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Schedules"
+                ],
+                "summary": "Delete a schedule (Admin)",
+                "operationId": "15706767eddaeedfadb6ac4560a535a2",
+                "parameters": [
+                    {
+                        "name": "table",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "schedule",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Jadwal berhasil dihapus."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tables/{table}/availability": {
+            "get": {
+                "tags": [
+                    "Schedules"
+                ],
+                "summary": "Check table availability for a specific date",
+                "operationId": "aff849cf23d0e51f798526d7bc48422b",
+                "parameters": [
+                    {
+                        "name": "table",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "date": {
+                                                    "type": "string",
+                                                    "format": "date"
+                                                },
+                                                "day_name": {
+                                                    "type": "string"
+                                                },
+                                                "is_available": {
+                                                    "type": "boolean"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "open_time": {
+                                                    "type": "string",
+                                                    "format": "time",
+                                                    "nullable": true
+                                                },
+                                                "close_time": {
+                                                    "type": "string",
+                                                    "format": "time",
+                                                    "nullable": true
+                                                },
+                                                "slots": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "start_time": {
+                                                                "type": "string",
+                                                                "format": "time"
+                                                            },
+                                                            "end_time": {
+                                                                "type": "string",
+                                                                "format": "time"
+                                                            },
+                                                            "is_available": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tables": {
+            "get": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Get list of tables",
+                "operationId": "ff9d243a2aac0c783b0b20f5bd9d5913",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TableResource"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "limit": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Create a new table (Admin)",
+                "operationId": "ee3cdb4f76abd42e86f037b17e4d0206",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "table_number",
+                                    "name",
+                                    "type",
+                                    "price_per_hour"
+                                ],
+                                "properties": {
+                                    "table_number": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "capacity": {
+                                        "type": "integer"
+                                    },
+                                    "price_per_hour": {
+                                        "type": "number"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Meja berhasil ditambahkan."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TableResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tables/{id}": {
+            "get": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Get table information",
+                "operationId": "465490c7477f4f985439a763800c841c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TableResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Update existing table (Admin)",
+                "operationId": "1b0db842a021f0e5558f861a6dfc961a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "table_number": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "capacity": {
+                                        "type": "integer"
+                                    },
+                                    "price_per_hour": {
+                                        "type": "number"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Meja berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TableResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Delete a table (Admin)",
+                "operationId": "fe0835f1e615253c8ba068fad5293f97",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Meja berhasil dihapus."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/tables/monitor": {
+            "get": {
+                "tags": [
+                    "Tables"
+                ],
+                "summary": "Monitor live table status (Admin)",
+                "operationId": "e929de911a5a41d5c83a60183544995e",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer"
+                                                    },
+                                                    "table_number": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "is_occupied": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "time_remaining_minutes": {
+                                                        "type": "integer"
+                                                    },
+                                                    "active_booking": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer"
+                                                            },
+                                                            "customer_name": {
+                                                                "type": "string"
+                                                            },
+                                                            "start_time": {
+                                                                "type": "string",
+                                                                "format": "time"
+                                                            },
+                                                            "end_time": {
+                                                                "type": "string",
+                                                                "format": "time"
+                                                            }
+                                                        },
+                                                        "type": "object",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/transactions": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get list of transactions (Admin)",
+                "operationId": "9b50e29e364179ebde24ac5fc59cd442",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "payment_status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "unpaid",
+                                "paid",
+                                "refunded"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TransactionResource"
+                                            }
+                                        },
+                                        "meta": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer"
+                                                },
+                                                "last_page": {
+                                                    "type": "integer"
+                                                },
+                                                "limit": {
+                                                    "type": "integer"
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/transactions/{id}": {
+            "get": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Get transaction information (Admin)",
+                "operationId": "45e35076645e40d84080bf253c06a689",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TransactionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Transactions"
+                ],
+                "summary": "Update transaction payment status (Admin)",
+                "operationId": "7b66e2af7e3debf197a73522aa5ab6a6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "payment_status"
+                                ],
+                                "properties": {
+                                    "payment_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "unpaid",
+                                            "paid",
+                                            "refunded"
+                                        ]
+                                    },
+                                    "payment_method": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Status transaksi berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/TransactionResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BookingResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "user": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/UserResource"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "table": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/TableResource"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "booking_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "duration_hours": {
+                        "type": "number"
+                    },
+                    "total_price": {
+                        "type": "number"
+                    },
+                    "total_price_formatted": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "transaction": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/TransactionResource"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ScheduleResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "table_id": {
+                        "type": "integer"
+                    },
+                    "day_of_week": {
+                        "type": "integer"
+                    },
+                    "day_name": {
+                        "type": "string"
+                    },
+                    "open_time": {
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "close_time": {
+                        "type": "string",
+                        "format": "time"
+                    },
+                    "is_available": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "TableResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "table_number": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "price_per_hour": {
+                        "type": "number"
+                    },
+                    "price_per_hour_formatted": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "schedules": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ScheduleResource"
+                        },
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TransactionResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "booking_id": {
+                        "type": "integer"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "amount_formatted": {
+                        "type": "string"
+                    },
+                    "payment_method": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "payment_status": {
+                        "type": "string"
+                    },
+                    "paid_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "booking": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/BookingResource"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "role": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Bookings",
+            "description": "Bookings"
+        },
+        {
+            "name": "Reports",
+            "description": "Reports"
+        },
+        {
+            "name": "Schedules",
+            "description": "Schedules"
+        },
+        {
+            "name": "Tables",
+            "description": "Tables"
+        },
+        {
+            "name": "Transactions",
+            "description": "Transactions"
+        }
+    ]
+}
