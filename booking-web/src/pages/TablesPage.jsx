@@ -13,9 +13,13 @@ import {
   Pagination,
   Skeleton,
   Card,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import IconSearch from '../assets/icons/icon_search_read.png';
 import SearchIcon from '@mui/icons-material/Search';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ViewListIcon from '@mui/icons-material/ViewList';
 import useTableStore from '../stores/tableStore';
 import TableCard from '../components/organisms/TableCard';
 import EmptyState from '../components/molecules/EmptyState';
@@ -26,6 +30,7 @@ export default function TablesPage() {
   const [search, setSearch] = useState('');
   const [type, setType] = useState('');
   const [page, setPage] = useState(1);
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     fetchTables({ search: search || undefined, type: type || undefined, page, limit: 12 });
@@ -90,14 +95,36 @@ export default function TablesPage() {
               <MenuItem value="premium">Premium</MenuItem>
             </Select>
           </FormControl>
+          <Box sx={{ width: { xs: '100%', md: '1px' }, height: { xs: '1px', md: 'auto' }, bgcolor: 'divider', my: { xs: 0, md: 1 } }} />
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={(e, val) => val && setViewMode(val)}
+            size="small"
+            sx={{
+              '& .MuiToggleButton-root': {
+                border: 'none',
+                borderRadius: 2,
+                color: 'text.secondary',
+                '&.Mui-selected': { bgcolor: 'primary.50', color: 'primary.main' }
+              }
+            }}
+          >
+            <ToggleButton value="grid" aria-label="grid view">
+              <ViewModuleIcon />
+            </ToggleButton>
+            <ToggleButton value="list" aria-label="list view">
+              <ViewListIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Box>
 
         {/* Grid */}
         {isLoading ? (
           <Grid container spacing={3}>
             {Array.from({ length: 6 }).map((_, i) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i}>
-                <Card sx={{ borderRadius: '16px', overflow: 'hidden' }}>
+              <Grid size={viewMode === 'grid' ? { xs: 12, sm: 6, md: 4 } : { xs: 12 }} key={i}>
+                <Card sx={{ borderRadius: '16px', overflow: 'hidden', display: viewMode === 'list' ? 'flex' : 'block' }}>
                   <Skeleton variant="rectangular" height={140} />
                   <Box sx={{ p: 2.5 }}>
                     <Skeleton width="60%" height={28} />
@@ -119,8 +146,8 @@ export default function TablesPage() {
           <>
             <Grid container spacing={3}>
               {tables.map((table) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={table.id}>
-                  <TableCard table={table} />
+                <Grid size={viewMode === 'grid' ? { xs: 12, sm: 6, md: 4 } : { xs: 12 }} key={table.id}>
+                  <TableCard table={table} viewMode={viewMode} />
                 </Grid>
               ))}
             </Grid>

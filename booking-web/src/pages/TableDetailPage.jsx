@@ -132,61 +132,112 @@ export default function TableDetailPage() {
 
   const today = new Date().toISOString().split('T')[0];
 
-  return (
-    <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
-      <Container maxWidth="lg">
-        <Button
-          startIcon={<ArrowLeft size={18} />}
-          onClick={() => navigate('/tables')}
-          sx={{ mb: 4, color: 'text.secondary', fontWeight: 600, '&:hover': { color: 'text.primary', bgcolor: 'transparent' } }}
-          disableRipple
-        >
-          Kembali ke Daftar Meja
-        </Button>
+  let displayImg = currentTable.image_url;
+  if (!displayImg || displayImg.length < 5) {
+    if (currentTable.type === 'vip') {
+      displayImg = 'https://images.unsplash.com/photo-1628190395400-34863bc0d638?auto=format&fit=crop&w=1200&q=80'; // Elegant room
+    } else if (currentTable.type === 'premium') {
+      displayImg = 'https://images.unsplash.com/photo-1549420687-32cc6ef1fcc4?auto=format&fit=crop&w=1200&q=80'; // Lounge
+    } else {
+      displayImg = 'https://images.unsplash.com/photo-1595333068695-1f6e1f0e4e5e?auto=format&fit=crop&w=1200&q=80'; // Standard Billiard
+    }
+  }
 
+  return (
+    <Box sx={{ pb: { xs: 8, md: 10 }, pt: 0, bgcolor: 'background.default' }}>
+      {/* Premium Hero Image Header */}
+      <Box sx={{ position: 'relative', height: { xs: 280, sm: 350, md: 400 }, mb: { xs: 4, md: 6 }, bgcolor: 'grey.900' }}>
+        <Box
+          component="img"
+          src={displayImg}
+          alt={currentTable.name}
+          sx={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
+        />
+        <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,1) 0%, rgba(15,23,42,0) 100%)' }} />
+        
+        <Container maxWidth="lg" sx={{ height: '100%', position: 'relative' }}>
+          <Button
+            startIcon={<ArrowLeft size={18} />}
+            onClick={() => navigate('/tables')}
+            disableRipple
+            sx={{ 
+              position: 'absolute', 
+              top: { xs: 16, md: 32 }, 
+              left: { xs: 20, sm: 24, md: 40 }, 
+              color: '#fff', 
+              fontWeight: 700, 
+              bgcolor: 'rgba(255,255,255,0.15)', 
+              backdropFilter: 'blur(10px)',
+              border: '1px solid',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderRadius: 8,
+              px: { xs: 2, md: 3 },
+              py: { xs: 0.8, md: 1 },
+              fontSize: { xs: '0.85rem', md: '0.9rem' },
+              textTransform: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              transition: 'all 0.2s ease',
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.25)', transform: 'translateY(-2px)' }
+            }}
+          >
+            Kembali
+          </Button>
+          
+          <Box sx={{ position: 'absolute', bottom: { xs: 24, md: 40 }, left: { xs: 20, sm: 24, md: 40 }, right: { xs: 20, md: 'auto' } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+              <Chip
+                label={currentTable.type?.toUpperCase() || 'STANDARD'}
+                sx={{ 
+                  fontWeight: 800, 
+                  borderRadius: 1.5, 
+                  height: 26, 
+                  px: 1, 
+                  fontSize: '0.75rem', 
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  bgcolor: currentTable.type === 'vip' ? '#ef4444' : currentTable.type === 'premium' ? 'primary.main' : '#ffffff',
+                  color: currentTable.type === 'vip' || currentTable.type === 'premium' ? '#ffffff' : '#0f172a',
+                  letterSpacing: '0.05em'
+                }}
+              />
+              <Typography variant="subtitle2" sx={{ color: 'primary.main', fontWeight: 800, letterSpacing: '0.1em', textShadow: '0 2px 10px rgba(0,0,0,0.8)', fontSize: { xs: '0.8rem', md: '0.9rem' } }}>
+                MEJA #{currentTable.table_number}
+              </Typography>
+            </Box>
+            <Typography variant="h1" sx={{ fontWeight: 800, color: '#ffffff', fontSize: { xs: '2.2rem', sm: '3rem', md: '4.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>
+              {currentTable.name}
+            </Typography>
+          </Box>
+        </Container>
+      </Box>
+
+      <Container maxWidth="lg">
         <Grid container spacing={6}>
           {/* Left: Table info */}
           <Grid size={{ xs: 12, md: 7 }}>
             <Box sx={{ mb: 6 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Chip
-                  label={currentTable.type?.toUpperCase() || 'STANDARD'}
-                  size="small"
-                  color={currentTable.type === 'vip' ? 'error' : currentTable.type === 'premium' ? 'primary' : 'default'}
-                  sx={{ fontWeight: 700, borderRadius: 2, height: 28, px: 1 }}
-                />
-                <Typography variant="subtitle2" sx={{ color: 'primary.main', fontWeight: 800, letterSpacing: '0.05em' }}>
-                  MEJA #{currentTable.table_number}
-                </Typography>
-              </Box>
-              
-              <Typography variant="h1" sx={{ fontWeight: 800, mb: { xs: 3, md: 4 }, fontSize: { xs: '2rem', sm: '2.5rem', md: '3.5rem' }, lineHeight: 1.1, letterSpacing: '-0.02em', color: 'text.primary' }}>
-                {currentTable.name}
-              </Typography>
-              
-              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' }, gap: { xs: 3, md: 4 }, mb: { xs: 4, md: 5 } }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Box sx={{ p: { xs: 1, sm: 1.5 }, borderRadius: 2.5, bgcolor: 'primary.50', color: 'primary.main' }}>
-                    <Clock size={24} />
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'stretch', sm: 'center' }, gap: { xs: 2, md: 4 }, mb: { xs: 4, md: 5 } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: { xs: 2, sm: 0 }, bgcolor: { xs: '#f8fafc', sm: 'transparent' }, borderRadius: 3, border: { xs: '1px solid', sm: 'none' }, borderColor: 'grey.100' }}>
+                  <Box sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 3, bgcolor: 'primary.50', color: 'primary.main' }}>
+                    <Clock size={28} />
                   </Box>
                   <Box>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.2, fontWeight: 500 }}>Tarif per Jam</Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 800, fontSize: { xs: '1.1rem', sm: '1.25rem' }, lineHeight: 1 }}>{currentTable.price_per_hour_formatted}</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.2, fontWeight: 600, letterSpacing: '0.05em' }}>TARIF PER JAM</Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>{currentTable.price_per_hour_formatted}</Typography>
                   </Box>
                 </Box>
-                <Box sx={{ width: { xs: '100%', sm: '1px' }, height: { xs: '1px', sm: 40 }, bgcolor: 'grey.200' }} />
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                  <Box sx={{ p: { xs: 1, sm: 1.5 }, borderRadius: 2.5, bgcolor: 'grey.50', color: 'text.secondary' }}>
-                    <Info size={24} />
+                
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: { xs: 2, sm: 0 }, bgcolor: { xs: '#f8fafc', sm: 'transparent' }, borderRadius: 3, border: { xs: '1px solid', sm: 'none' }, borderColor: 'grey.100' }}>
+                  <Box sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 3, bgcolor: 'grey.50', color: 'text.secondary', border: '1px solid', borderColor: 'grey.200' }}>
+                    <Info size={28} />
                   </Box>
                   <Box>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.2, fontWeight: 500 }}>Kondisi Meja</Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 800, fontSize: { xs: '1.1rem', sm: '1.25rem' }, lineHeight: 1 }}>Sangat Terawat</Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.2, fontWeight: 600, letterSpacing: '0.05em' }}>KONDISI MEJA</Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>Sangat Terawat</Typography>
                   </Box>
                 </Box>
               </Box>
 
-              <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, fontSize: '1.1rem', mb: 6 }}>
+              <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, fontSize: { xs: '1rem', md: '1.1rem' }, mb: { xs: 4, md: 6 }, p: { xs: 2, md: 0 }, bgcolor: { xs: 'grey.50', md: 'transparent' }, borderRadius: 4 }}>
                 {currentTable.description || 'Rasakan pengalaman bermain terbaik dengan meja billiard standar profesional yang dirawat secara rutin setiap hari. Sempurna untuk permainan kasual maupun turnamen.'}
               </Typography>
             </Box>

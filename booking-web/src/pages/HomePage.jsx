@@ -36,37 +36,6 @@ const features = [
   },
 ];
 
-// Animated counter hook
-function useCounter(target, duration = 2000, startOnView = true) {
-  const [count, setCount] = useState(0);
-  const [started, setStarted] = useState(!startOnView);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    if (!startOnView) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStarted(true); },
-      { threshold: 0.3 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [startOnView]);
-
-  useEffect(() => {
-    if (!started) return;
-    let start = 0;
-    const step = target / (duration / 16);
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(Math.floor(start));
-    }, 16);
-    return () => clearInterval(timer);
-  }, [started, target, duration]);
-
-  return { count, ref };
-}
-
 // Marquee component for social proof
 function Marquee({ children, speed = 30 }) {
   return (
@@ -96,9 +65,6 @@ export default function HomePage() {
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const counter1 = useCounter(50, 1500);
-  const counter2 = useCounter(1200, 2000);
-  const counter3 = useCounter(98, 1800);
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', overflowX: 'hidden' }}>
@@ -391,9 +357,9 @@ export default function HomePage() {
         <Container maxWidth="lg">
           <Grid container spacing={4}>
             {[
-              { ref: counter1.ref, value: counter1.count, suffix: '+', label: 'Meja Tersedia', sublabel: 'Berbagai tipe & ukuran', icon: EmojiEventsTwoToneIcon, color: '#0d9668' },
-              { ref: counter2.ref, value: counter2.count, suffix: '+', label: 'Booking Selesai', sublabel: 'Dan terus bertambah', icon: GroupsTwoToneIcon, color: '#2563eb' },
-              { ref: counter3.ref, value: counter3.count, suffix: '%', label: 'Kepuasan Pelanggan', sublabel: 'Rating dari pengguna', icon: StarRoundedIcon, color: '#ea580c' },
+              { value: '50', suffix: '+', label: 'Meja Tersedia', sublabel: 'Berbagai tipe & ukuran', icon: EmojiEventsTwoToneIcon, color: '#0d9668' },
+              { value: '1.200', suffix: '+', label: 'Booking Selesai', sublabel: 'Dan terus bertambah', icon: GroupsTwoToneIcon, color: '#2563eb' },
+              { value: '98', suffix: '%', label: 'Kepuasan Pelanggan', sublabel: 'Rating dari pengguna', icon: StarRoundedIcon, color: '#ea580c' },
             ].map((stat, idx) => (
               <Grid size={{ xs: 12, md: 4 }} key={idx}>
                 <motion.div
@@ -403,7 +369,6 @@ export default function HomePage() {
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                 >
                   <Box
-                    ref={stat.ref}
                     sx={{
                       p: 4, border: '1px solid', borderColor: 'divider',
                       display: 'flex', alignItems: 'center', gap: 3,
@@ -418,8 +383,8 @@ export default function HomePage() {
                       <stat.icon sx={{ fontSize: 24, color: stat.color }} />
                     </Box>
                     <Box>
-                      <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1 }}>
-                        {stat.value.toLocaleString('id-ID')}{stat.suffix}
+                      <Typography variant="h3" sx={{ fontWeight: 800, color: '#0f172a', mb: 0.5 }}>
+                        {stat.value}{stat.suffix}
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 700, color: 'text.primary', mt: 0.5 }}>
                         {stat.label}
@@ -598,8 +563,15 @@ export default function HomePage() {
         </Container>
       </Box>
 
-      {/* ═══════════ VENUE GALLERY ═══════════ */}
-      <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: '#0f172a' }}>
+      {/* ═══════════ SNEAK PEEK VENUE (CIRCULAR GALLERY) ═══════════ */}
+      <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: '#0f172a', position: 'relative', overflow: 'hidden' }}>
+        {/* Subtle glowing blob behind gallery */}
+        <Box sx={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          width: '80%', height: '80%', bgcolor: 'primary.main', opacity: 0.05,
+          filter: 'blur(100px)', borderRadius: '50%', zIndex: 0
+        }} />
+
         <Container maxWidth="lg">
           <Box
             component={motion.div}
@@ -607,20 +579,22 @@ export default function HomePage() {
             style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6 }}
-            sx={{ textAlign: 'center', mb: { xs: 2, md: 3 }, position: 'relative', zIndex: 10 }}
+            sx={{ textAlign: 'center', mb: { xs: 6, md: 8 }, position: 'relative', zIndex: 1 }}
           >
-            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 2, display: 'block', mb: 1.5 }}>
-              VENUE KAMI
+            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 1.5, display: 'block', mb: 1 }}>
+              GALERI KAMI
             </Typography>
-            <Typography variant="h3" sx={{ fontWeight: 800, color: '#ffffff', mb: 2, fontSize: { xs: '1.8rem', md: '2.3rem' } }}>
+            <Typography variant="h2" sx={{ fontWeight: 800, color: '#ffffff', fontSize: { xs: '2rem', md: '2.75rem' }, mb: 2 }}>
               Sneak Peek Venue
             </Typography>
-            <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.5)', maxWidth: 550, mx: 'auto', lineHeight: 1.7 }}>
-              Meja premium, lighting profesional, dan suasana yang bikin betah main lama.
+            <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.5)', maxWidth: 600, mx: 'auto', lineHeight: 1.7 }}>
+              Geser ke kiri atau kanan untuk menjelajahi meja billiard kelas premium dan suasana arena kami.
             </Typography>
           </Box>
         </Container>
-        <Box sx={{ height: { xs: '350px', sm: '450px', md: '600px' }, mt: { xs: -4, md: -8 }, position: 'relative', width: '100%', overflow: 'hidden' }}>
+
+        {/* Circular Gallery WebGL Component */}
+        <Box sx={{ height: { xs: '450px', md: '600px' }, width: '100%', position: 'relative', zIndex: 1, '& canvas': { outline: 'none' } }}>
           <CircularGallery
             bend={1}
             textColor="#ffffff"
