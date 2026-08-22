@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  IconButton, Pagination, Dialog, DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem, FormControl, InputLabel
+  IconButton, Pagination, Dialog, DialogTitle, DialogContent, DialogActions, Button, Select, MenuItem, FormControl, InputLabel,
+  Card, CardContent, useTheme, alpha
 } from '@mui/material';
 import IconEdit from '../../assets/icons/icon_edit_update.png';
 import IconDelete from '../../assets/icons/icon_delete_remove.png';
@@ -12,6 +13,7 @@ import StatusBadge from '../../components/atoms/StatusBadge';
 import ConfirmDialog from '../../components/molecules/ConfirmDialog';
 
 export default function AdminTransactionsPage() {
+  const theme = useTheme();
   const [transactions, setTransactions] = useState([]);
   const [meta, setMeta] = useState(null);
   const [page, setPage] = useState(1);
@@ -95,7 +97,8 @@ export default function AdminTransactionsPage() {
         <Typography variant="body2" color="text.secondary">Kelola pembayaran dari pelanggan.</Typography>
       </Box>
 
-      <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 0, borderTop: '4px solid #0f172a' }}>
+      {/* Desktop Table */}
+      <TableContainer component={Paper} elevation={0} sx={{ display: { xs: 'none', md: 'block' }, border: '1px solid', borderColor: 'divider', borderRadius: 0, borderTop: '4px solid #0f172a' }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -158,6 +161,60 @@ export default function AdminTransactionsPage() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Mobile Card Layout */}
+      <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
+        {loading ? (
+          <Paper elevation={0} sx={{ p: 4, textAlign: 'center', border: '1px solid', borderColor: 'divider', borderRadius: 3 }}>
+            <Typography color="text.secondary">Memuat...</Typography>
+          </Paper>
+        ) : transactions.length === 0 ? (
+          <Paper elevation={0} sx={{ p: 4, textAlign: 'center', border: '1px solid', borderColor: 'divider', borderRadius: 3 }}>
+            <Typography color="text.secondary">Belum ada transaksi.</Typography>
+          </Paper>
+        ) : (
+          transactions.map((row) => (
+            <Card key={row.id} elevation={0} sx={{ borderRadius: 4, border: '1px solid', borderColor: alpha('#94a3b8', 0.3) }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Box>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: 'text.primary', mb: 0.5 }}>TRX-{row.id}</Typography>
+                    <Typography variant="body2" color="text.secondary" fontWeight={600}>
+                      {row.booking?.notes?.startsWith('Walk-in: ') 
+                        ? row.booking.notes.replace('Walk-in: ', '') 
+                        : row.booking?.user?.name}
+                    </Typography>
+                  </Box>
+                  <StatusBadge status={row.payment_status} />
+                </Box>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
+                  <Typography variant="body2" color="text.secondary" fontWeight={600}>Tanggal</Typography>
+                  <Typography variant="body2" fontWeight={700}>{row.paid_at ? new Date(row.paid_at).toLocaleDateString('id-ID') : '-'}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2.5 }}>
+                  <Typography variant="body2" color="text.secondary" fontWeight={600}>Nominal</Typography>
+                  <Typography variant="body1" fontWeight={800} color="primary.main">{row.amount_formatted}</Typography>
+                </Box>
+                
+                {row.payment_status === 'unpaid' && (
+                  <Button fullWidth variant="contained" color="success" size="small" onClick={() => handleMarkAsPaid(row)} startIcon={<CheckCircleIcon />} sx={{ borderRadius: 2, py: 1, fontWeight: 700, mb: 1.5 }}>
+                    Tandai Lunas
+                  </Button>
+                )}
+                <Box sx={{ display: 'flex', gap: 1.5, pt: 2, borderTop: '1px dashed', borderColor: alpha('#94a3b8', 0.3) }}>
+                  <Button fullWidth variant="outlined" size="small" onClick={() => handleEditClick(row)} startIcon={<img src={IconEdit} style={{ width: 16 }} alt="Edit" />} sx={{ borderRadius: 2, py: 1, fontWeight: 700 }}>
+                    Edit
+                  </Button>
+                  <Button fullWidth variant="outlined" color="error" size="small" onClick={() => handleDeleteClick(row)} startIcon={<img src={IconDelete} style={{ width: 16 }} alt="Delete" />} sx={{ borderRadius: 2, py: 1, fontWeight: 700 }}>
+                    Hapus
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </Box>
 
       {meta && meta.last_page > 1 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>

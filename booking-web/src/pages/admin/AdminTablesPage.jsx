@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   Box, Typography, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, FormControlLabel, Switch, Grid, TablePagination
+  IconButton, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, FormControlLabel, Switch, Grid, TablePagination,
+  Card, CardContent, useTheme, alpha
 } from '@mui/material';
 import IconAdd from '../../assets/icons/icon_add_create.png';
 import IconEdit from '../../assets/icons/icon_edit_update.png';
@@ -11,6 +12,7 @@ import toast from 'react-hot-toast';
 import ConfirmDialog from '../../components/molecules/ConfirmDialog';
 
 export default function AdminTablesPage() {
+  const theme = useTheme();
   const { tables, meta, fetchTables, createTable, updateTable, deleteTable, isLoading } = useTableStore();
   const [openForm, setOpenForm] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -111,14 +113,15 @@ export default function AdminTablesPage() {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 2, mb: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 800 }}>Kelola Meja Billiard</Typography>
         <Button variant="contained" startIcon={<img src={IconAdd} style={{ width: 20, height: 20, filter: 'brightness(0) invert(1)' }} alt="Add" />} onClick={() => handleOpenForm()}>
           Tambah Meja
         </Button>
       </Box>
 
-      <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 0, borderTop: '4px solid #0f172a' }}>
+      {/* Desktop Table */}
+      <TableContainer component={Paper} elevation={0} sx={{ display: { xs: 'none', md: 'block' }, border: '1px solid', borderColor: 'divider', borderRadius: 0, borderTop: '4px solid #0f172a' }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -174,6 +177,66 @@ export default function AdminTablesPage() {
           />
         )}
       </TableContainer>
+
+      {/* Mobile Card Layout */}
+      <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
+        {tables.length === 0 ? (
+          <Paper elevation={0} sx={{ p: 4, textAlign: 'center', border: '1px solid', borderColor: 'divider', borderRadius: 3 }}>
+            <Typography color="text.secondary">Belum ada data meja.</Typography>
+          </Paper>
+        ) : (
+          tables.map((row) => (
+            <Card key={row.id} elevation={0} sx={{ borderRadius: 4, border: '1px solid', borderColor: alpha('#94a3b8', 0.3) }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Box>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: 'text.primary', mb: 0.5 }}>Meja #{row.table_number}</Typography>
+                    <Typography variant="body2" color="text.secondary" fontWeight={600}>{row.name}</Typography>
+                  </Box>
+                  <Box sx={{ px: 1.5, py: 0.75, borderRadius: '100px', bgcolor: row.is_active ? alpha(theme.palette.success.main, 0.1) : alpha(theme.palette.error.main, 0.1) }}>
+                    <Typography sx={{ color: row.is_active ? 'success.main' : 'error.main', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      {row.is_active ? 'Aktif' : 'Nonaktif'}
+                    </Typography>
+                  </Box>
+                </Box>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
+                  <Typography variant="body2" color="text.secondary" fontWeight={600}>Tipe Meja</Typography>
+                  <Typography variant="body2" fontWeight={700} sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>{row.type}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2.5 }}>
+                  <Typography variant="body2" color="text.secondary" fontWeight={600}>Tarif / Jam</Typography>
+                  <Typography variant="body1" fontWeight={800} color="primary.main">{row.price_per_hour_formatted}</Typography>
+                </Box>
+                
+                <Box sx={{ display: 'flex', gap: 1.5, pt: 2, borderTop: '1px dashed', borderColor: alpha('#94a3b8', 0.3) }}>
+                  <Button fullWidth variant="outlined" size="small" onClick={() => handleOpenForm(row)} startIcon={<img src={IconEdit} style={{ width: 16 }} alt="Edit" />} sx={{ borderRadius: 2, py: 1, fontWeight: 700 }}>
+                    Edit
+                  </Button>
+                  <Button fullWidth variant="outlined" color="error" size="small" onClick={() => handleDeleteClick(row.id)} startIcon={<img src={IconDelete} style={{ width: 16 }} alt="Delete" />} sx={{ borderRadius: 2, py: 1, fontWeight: 700 }}>
+                    Hapus
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          ))
+        )}
+        {meta && (
+          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center', bgcolor: '#fff', borderRadius: 3, border: '1px solid', borderColor: alpha('#94a3b8', 0.3) }}>
+            <TablePagination
+              component="div"
+              count={meta.total || 0}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              rowsPerPageOptions={[5, 10, 15, 25]}
+              labelRowsPerPage="Per halaman:"
+              sx={{ '.MuiTablePagination-toolbar': { px: 2 } }}
+            />
+          </Box>
+        )}
+      </Box>
 
       {/* Form Dialog */}
       <Dialog open={openForm} onClose={handleCloseForm} maxWidth="sm" fullWidth>

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
-  IconButton, Pagination, Tooltip, Chip
+  IconButton, Pagination, Tooltip, Chip,
+  Card, CardContent, useTheme, alpha, Button
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
@@ -13,6 +14,7 @@ import ConfirmDialog from '../../components/molecules/ConfirmDialog';
 import ReceiptModal from '../../components/molecules/ReceiptModal';
 
 export default function AdminBookingsPage() {
+  const theme = useTheme();
   const { bookings, meta, fetchBookings, confirmBooking, completeBooking } = useBookingStore();
   const [page, setPage] = useState(1);
   const [confirmDialog, setConfirmDialog] = useState({ open: false, id: null, action: null });
@@ -52,7 +54,8 @@ export default function AdminBookingsPage() {
         <Typography variant="body2" color="text.secondary">Konfirmasi dan selesaikan booking pelanggan.</Typography>
       </Box>
 
-      <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 0, borderTop: '4px solid #0f172a' }}>
+      {/* Desktop Table */}
+      <TableContainer component={Paper} elevation={0} sx={{ display: { xs: 'none', md: 'block' }, border: '1px solid', borderColor: 'divider', borderRadius: 0, borderTop: '4px solid #0f172a' }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -114,6 +117,62 @@ export default function AdminBookingsPage() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Mobile Card Layout */}
+      <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
+        {bookings.length === 0 ? (
+          <Paper elevation={0} sx={{ p: 4, textAlign: 'center', border: '1px solid', borderColor: 'divider', borderRadius: 3 }}>
+            <Typography color="text.secondary">Belum ada booking.</Typography>
+          </Paper>
+        ) : (
+          bookings.map((row) => (
+            <Card key={row.id} elevation={0} sx={{ borderRadius: 4, border: '1px solid', borderColor: alpha('#94a3b8', 0.3) }}>
+              <CardContent sx={{ p: 2.5 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Box>
+                    <Typography sx={{ fontWeight: 800, fontSize: '1.15rem', color: 'text.primary', mb: 0.5 }}>Booking #{row.id}</Typography>
+                    <Typography variant="body2" color="text.secondary" fontWeight={600}>{row.table?.name}</Typography>
+                  </Box>
+                  <StatusBadge status={row.status} />
+                </Box>
+                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
+                  <Typography variant="body2" color="text.secondary" fontWeight={600}>Pelanggan</Typography>
+                  <Box sx={{ textAlign: 'right' }}>
+                    <Typography variant="body2" fontWeight={700}>{row.user?.name}</Typography>
+                    <Typography variant="caption" color="text.secondary" display="block">{row.user?.email}</Typography>
+                  </Box>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2.5 }}>
+                  <Typography variant="body2" color="text.secondary" fontWeight={600}>Waktu</Typography>
+                  <Box sx={{ textAlign: 'right' }}>
+                    <Typography variant="body2" fontWeight={700}>{row.booking_date}</Typography>
+                    <Typography variant="caption" color="text.secondary" display="block">{row.start_time} - {row.end_time}</Typography>
+                  </Box>
+                </Box>
+                
+                <Box sx={{ display: 'flex', gap: 1.5, pt: 2, borderTop: '1px dashed', borderColor: alpha('#94a3b8', 0.3), flexWrap: 'wrap' }}>
+                  {row.status === 'pending' && (
+                    <Button fullWidth variant="outlined" size="small" onClick={() => handleActionClick(row.id, 'confirm')} startIcon={<CheckCircleIcon />} sx={{ borderRadius: 2, py: 1, fontWeight: 700 }}>
+                      Konfirmasi
+                    </Button>
+                  )}
+                  {(row.status === 'pending' || row.status === 'confirmed') && (
+                    <Button fullWidth variant="outlined" color="success" size="small" onClick={() => handleActionClick(row.id, 'complete')} startIcon={<DoneAllIcon />} sx={{ borderRadius: 2, py: 1, fontWeight: 700 }}>
+                      Selesai
+                    </Button>
+                  )}
+                  {row.transaction?.payment_status === 'paid' && (
+                    <Button fullWidth variant="outlined" color="info" size="small" onClick={() => setReceiptModal({ open: true, booking: row })} startIcon={<img src={IconDownload} style={{ width: 16 }} alt="Cetak" />} sx={{ borderRadius: 2, py: 1, fontWeight: 700 }}>
+                      Struk
+                    </Button>
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </Box>
 
       {meta && meta.last_page > 1 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
