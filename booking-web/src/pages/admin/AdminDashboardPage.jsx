@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -134,13 +134,13 @@ export default function AdminDashboardPage() {
   return (
     <Box sx={{ pb: 4 }}>
       {/* Header */}
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <Box sx={{ mb: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'flex-end' }, gap: { xs: 2, sm: 0 } }}>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mb: 0.5, letterSpacing: '-0.02em' }}>
-            {greeting} ðŸ‘‹
+          <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mb: 0.5, letterSpacing: '-0.02em', fontSize: { xs: '1.75rem', md: '2.125rem' } }}>
+            {greeting} 👋
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
-            {today} â€” Dashboard Billiard Booking System
+            {today} — Dashboard Billiard Booking System
           </Typography>
         </Box>
         <Button 
@@ -174,7 +174,7 @@ export default function AdminDashboardPage() {
         {/* === ROW 1: 4 Stat Cards === */}
         
         {/* Total Meja */}
-        <BentoCell sx={{ gridColumn: 'span 3', p: 3 }}>
+        <BentoCell sx={{ gridColumn: { xs: 'span 12', sm: 'span 6', lg: 'span 3' }, p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
             <Box sx={{
               width: 44, height: 44, borderRadius: 0,
@@ -209,7 +209,7 @@ export default function AdminDashboardPage() {
         </BentoCell>
 
         {/* Booking Hari Ini */}
-        <BentoCell sx={{ gridColumn: 'span 3', p: 3 }}>
+        <BentoCell sx={{ gridColumn: { xs: 'span 12', sm: 'span 6', lg: 'span 3' }, p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
             <Box sx={{
               width: 44, height: 44, borderRadius: 0,
@@ -230,7 +230,7 @@ export default function AdminDashboardPage() {
         </BentoCell>
 
         {/* Pelanggan Aktif */}
-        <BentoCell sx={{ gridColumn: 'span 3', p: 3 }}>
+        <BentoCell sx={{ gridColumn: { xs: 'span 12', sm: 'span 6', lg: 'span 3' }, p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
             <Box sx={{
               width: 44, height: 44, borderRadius: 0,
@@ -252,7 +252,7 @@ export default function AdminDashboardPage() {
 
         {/* Pendapatan */}
         <BentoCell sx={{ 
-          gridColumn: 'span 3', 
+          gridColumn: { xs: 'span 12', sm: 'span 6', lg: 'span 3' }, 
           p: 3,
           background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
           borderColor: 'transparent',
@@ -290,8 +290,8 @@ export default function AdminDashboardPage() {
 
         {/* === ROW 2: Meja Paling Laris (big) + Status Meja + Quick Actions === */}
 
-        {/* Meja Paling Laris â€” tall cell */}
-        <BentoCell sx={{ gridColumn: 'span 5', gridRow: 'span 2', display: 'flex', flexDirection: 'column' }}>
+        {/* Meja Paling Laris — tall cell */}
+        <BentoCell sx={{ gridColumn: { xs: 'span 12', lg: 'span 5' }, gridRow: { xs: 'auto', lg: 'span 2' }, display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ p: 3, pb: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
               <Box sx={{
@@ -387,8 +387,8 @@ export default function AdminDashboardPage() {
           </Box>
         </BentoCell>
 
-        {/* Status Meja â€” Occupancy Card */}
-        <BentoCell sx={{ gridColumn: 'span 4', p: 3, display: 'flex', flexDirection: 'column' }}>
+        {/* Status Meja — Occupancy Card */}
+        <BentoCell sx={{ gridColumn: { xs: 'span 12', lg: 'span 4' }, p: 3, display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2.5 }}>
             <Box sx={{
               width: 36, height: 36, borderRadius: 0,
@@ -481,7 +481,7 @@ export default function AdminDashboardPage() {
         </BentoCell>
 
         {/* Quick Actions */}
-        <BentoCell sx={{ gridColumn: 'span 3', gridRow: 'span 2', display: 'flex', flexDirection: 'column', p: 3 }}>
+        <BentoCell sx={{ gridColumn: { xs: 'span 12', sm: 'span 6', lg: 'span 3' }, gridRow: { xs: 'auto', lg: 'span 2' }, display: 'flex', flexDirection: 'column', p: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2.5 }}>
             <Box sx={{
               width: 36, height: 36, borderRadius: 0,
@@ -578,7 +578,7 @@ export default function AdminDashboardPage() {
         </BentoCell>
 
         {/* Ringkasan Summary Row */}
-        <BentoCell sx={{ gridColumn: 'span 4', p: 3, display: 'flex', flexDirection: 'column' }}>
+        <BentoCell sx={{ gridColumn: { xs: 'span 12', sm: 'span 6', lg: 'span 4' }, p: 3, display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
             <Box sx={{
               width: 36, height: 36, borderRadius: 0,
@@ -620,7 +620,7 @@ export default function AdminDashboardPage() {
           </Box>
         </BentoCell>
 
-        {/* === ROW 3: Aktivitas Terakhir â€” Full Width === */}
+        {/* === ROW 3: Aktivitas Terakhir — Full Width === */}
         <BentoCell sx={{ gridColumn: 'span 12', display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ p: 3, pb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -709,7 +709,7 @@ export default function AdminDashboardPage() {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: 'text.secondary' }}>
                       <CalendarIcon sx={{ fontSize: 13 }} />
                       <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem' }}>
-                        {booking.booking_date} â€¢ {booking.start_time}
+                        {booking.booking_date} — {booking.start_time}
                       </Typography>
                     </Box>
                   </Box>
