@@ -3,6 +3,7 @@ import MainLayout from './components/templates/MainLayout';
 import AuthLayout from './components/templates/AuthLayout';
 import AdminLayout from './components/templates/AdminLayout';
 import { ProtectedRoute, AdminRoute, GuestRoute } from './components/organisms/RouteGuards';
+import ScrollToTop from './components/atoms/ScrollToTop';
 
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -22,7 +23,9 @@ import AdminReportsPage from './pages/admin/AdminReportsPage';
 
 export default function App() {
   return (
-    <Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
       <Route element={<GuestRoute><AuthLayout /></GuestRoute>}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -49,6 +52,7 @@ export default function App() {
         <Route path="reports" element={<AdminReportsPage />} />
       </Route>
     </Routes>
+    </>
   );
 }
 
