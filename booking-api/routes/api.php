@@ -9,15 +9,18 @@ use App\Http\Controllers\Api\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health-check', function () {
-    // Dump raw environment variables to diagnose Railway connection
     $envVars = [];
     foreach ($_SERVER as $key => $value) {
         if (str_starts_with($key, 'DB_') || str_starts_with($key, 'MYSQL') || str_starts_with($key, 'APP_')) {
-            $envVars[$key] = $key === 'DB_PASSWORD' || $key === 'MYSQLPASSWORD' || $key === 'MYSQL_ROOT_PASSWORD'
+            $envVars[$key] = $key === 'DB_PASSWORD' || $key === 'MYSQLPASSWORD' || $key === 'MYSQL_ROOT_PASSWORD' || $key === 'APP_KEY'
                 ? '***hidden***'
                 : $value;
         }
     }
+    
+    // Dump raw .env file content
+    $rawEnv = file_exists(base_path('.env')) ? file_get_contents(base_path('.env')) : 'NO_ENV_FILE';
+    $rawEnvSafe = preg_replace('/(PASSWORD|APP_KEY|SECRET)=.*/i', '$1=***hidden***', $rawEnv);
 
     try {
         \Illuminate\Support\Facades\DB::connection()->getPdo();
@@ -31,6 +34,7 @@ Route::get('/health-check', function () {
             'driver' => $dbDriver,
             'tables_count' => count($tables),
             'env_vars' => $envVars,
+            'raw_env_file' => $rawEnvSafe
         ]);
     } catch (\Throwable $e) {
         return response()->json([
@@ -46,6 +50,7 @@ Route::get('/health-check', function () {
                 'url' => config('database.connections.mysql.url') ? 'SET' : 'NOT_SET',
             ],
             'env_vars' => $envVars,
+            'raw_env_file' => $rawEnvSafe
         ], 500);
     }
 });
