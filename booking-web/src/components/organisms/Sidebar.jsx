@@ -85,9 +85,10 @@ export default function Sidebar() {
                 sx={{
                   position: 'relative',
                   overflow: 'hidden',
-                  borderRadius: 0,
+                  borderRadius: 2,
                   mb: 0.5,
                   py: 1.2,
+                  px: 2,
                   bgcolor: active ? 'rgba(13,150,104,0.08)' : 'transparent',
                   color: active ? 'primary.main' : 'text.secondary',
                   '&:hover': {
@@ -102,7 +103,7 @@ export default function Sidebar() {
                   primary={item.label}
                   primaryTypographyProps={{
                     fontSize: '0.875rem',
-                    fontWeight: active ? 600 : 500,
+                    fontWeight: active ? 700 : 500,
                   }}
                 />
                 {active && (
@@ -112,9 +113,9 @@ export default function Sidebar() {
                       left: 0,
                       top: '50%',
                       transform: 'translateY(-50%)',
-                      width: 3,
+                      width: 4,
                       height: 24,
-                      borderRadius: '0 4px 4px 0',
+                      borderRadius: 4,
                       bgcolor: 'primary.main',
                     }}
                   />
@@ -130,7 +131,7 @@ export default function Sidebar() {
       <Box sx={{ p: 1.5 }}>
         <ListItemButton
           onClick={() => navigate('/')}
-          sx={{ borderRadius: 0, color: 'text.secondary' }}
+          sx={{ borderRadius: 2, color: 'text.secondary', px: 2, py: 1.2 }}
         >
           <ListItemIcon sx={{ minWidth: 40, color: 'inherit' }}>
             <ArrowBackIcon fontSize="small" />
