@@ -151,11 +151,11 @@ export default function TableDetailPage() {
           component="img"
           src={displayImg}
           alt={currentTable.name}
-          sx={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
+          sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
         />
         <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,1) 0%, rgba(15,23,42,0) 100%)' }} />
         
-        <Container maxWidth="lg" sx={{ height: '100%', position: 'relative' }}>
+        <Container maxWidth="lg" sx={{ height: '100%', position: 'relative', zIndex: 1 }}>
           <Button
             startIcon={<ArrowLeft size={18} />}
             onClick={() => navigate('/tables')}
