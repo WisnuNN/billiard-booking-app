@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/health-check', function () {
     try {
         \Illuminate\Support\Facades\DB::connection()->getPdo();
-        $tables = \Illuminate\Support\Facades\DB::select('SHOW TABLES');
+        $dbDriver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
+        $tables = $dbDriver === 'sqlite'
+            ? \Illuminate\Support\Facades\DB::select("SELECT name FROM sqlite_master WHERE type='table'")
+            : \Illuminate\Support\Facades\DB::select('SHOW TABLES');
         return response()->json([
             'status' => 'ok',
             'database' => 'connected',
+            'driver' => $dbDriver,
             'tables_count' => count($tables),
         ]);
     } catch (\Throwable $e) {
@@ -23,6 +27,7 @@ Route::get('/health-check', function () {
             'database' => 'connection_failed',
             'error_message' => $e->getMessage(),
             'db_config' => [
+                'connection' => config('database.default'),
                 'host' => config('database.connections.mysql.host'),
                 'port' => config('database.connections.mysql.port'),
                 'database' => config('database.connections.mysql.database'),
