@@ -1,7 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { Box, Typography, Button, Container, Grid, Paper, Stack, Divider, alpha } from '@mui/material';
-import { Calendar, CreditCard, CheckCircle, ArrowRight, ShieldCheck, Clock, Star, Users, Zap, Trophy, MapPin, Phone } from 'lucide-react';
+import CalendarMonthTwoToneIcon from '@mui/icons-material/CalendarMonthTwoTone';
+import PaymentTwoToneIcon from '@mui/icons-material/PaymentTwoTone';
+import ConfirmationNumberTwoToneIcon from '@mui/icons-material/ConfirmationNumberTwoTone';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import VerifiedUserTwoToneIcon from '@mui/icons-material/VerifiedUserTwoTone';
+import AccessTimeTwoToneIcon from '@mui/icons-material/AccessTimeTwoTone';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import GroupsTwoToneIcon from '@mui/icons-material/GroupsTwoTone';
+import FlashOnTwoToneIcon from '@mui/icons-material/FlashOnTwoTone';
+import EmojiEventsTwoToneIcon from '@mui/icons-material/EmojiEventsTwoTone';
+import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
+import PhoneInTalkTwoToneIcon from '@mui/icons-material/PhoneInTalkTwoTone';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import useAuthStore from '../stores/authStore';
 import CircularGallery from '../components/organisms/CircularGallery';
@@ -9,17 +20,17 @@ import BilliardBg from '../assets/billiard-bg.jpg';
 
 const features = [
   {
-    icon: Calendar,
+    icon: CalendarMonthTwoToneIcon,
     title: 'Real-time Availability',
     desc: 'Sistem terhubung langsung dengan ketersediaan meja. Tidak ada risiko double-booking.',
   },
   {
-    icon: CreditCard,
+    icon: PaymentTwoToneIcon,
     title: 'Pembayaran Seamless',
     desc: 'Mendukung berbagai metode pembayaran digital untuk proses booking yang instan.',
   },
   {
-    icon: CheckCircle,
+    icon: ConfirmationNumberTwoToneIcon,
     title: 'E-Ticket Otomatis',
     desc: 'E-Ticket terbit langsung di akun Anda tanpa perlu konfirmasi admin.',
   },
@@ -108,7 +119,7 @@ export default function HomePage() {
         {/* Parallax BG */}
         <Box
           component={motion.div}
-          style={{ y: heroY }}
+          style={{ y: heroY, willChange: 'transform' }}
           sx={{
             position: 'absolute',
             inset: 0,
@@ -133,14 +144,14 @@ export default function HomePage() {
         }} />
 
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
-          <motion.div style={{ opacity: heroOpacity }}>
+          <motion.div style={{ opacity: heroOpacity, willChange: 'opacity' }}>
             <Grid container spacing={6} alignItems="center">
               {/* Left */}
               <Grid size={{ xs: 12, md: 7 }}>
                 <Box
                   component={motion.div}
                   initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  style={{ willChange: 'transform, opacity' }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.9, ease: 'easeOut' }}
                   sx={{ textAlign: { xs: 'center', md: 'left' } }}
                 >
@@ -148,7 +159,7 @@ export default function HomePage() {
                   <Box
                     component={motion.div}
                     initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
+                    style={{ willChange: 'transform, opacity' }} animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                     sx={{
                       display: 'inline-flex', alignItems: 'center', gap: 1,
@@ -168,7 +179,7 @@ export default function HomePage() {
                     variant="h1"
                     sx={{
                       fontWeight: 800,
-                      fontSize: { xs: '2.5rem', sm: '3.2rem', md: '4rem' },
+                      fontSize: { xs: '2.2rem', sm: '3.2rem', md: '4rem' },
                       lineHeight: 1.05,
                       mb: 3,
                       color: '#ffffff',
@@ -200,13 +211,14 @@ export default function HomePage() {
                     Pilih meja, tentukan jadwal, langsung main. Sistem booking real-time yang memastikan meja favoritmu selalu siap saat kamu datang.
                   </Typography>
 
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent={{ xs: 'center', md: 'flex-start' }} alignItems="center">
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent={{ xs: 'center', md: 'flex-start' }} alignItems="center" sx={{ width: '100%' }}>
                     <Button
+                      fullWidth={true}
                       variant="contained"
                       size="large"
                       disableElevation
                       onClick={() => navigate('/tables')}
-                      endIcon={<ArrowRight size={18} />}
+                      endIcon={<ArrowForwardIcon fontSize="small" />}
                       sx={{
                         px: 4, py: 1.8, fontSize: '0.95rem', borderRadius: 0, fontWeight: 700,
                         bgcolor: 'primary.main', color: '#fff', textTransform: 'none',
@@ -225,6 +237,7 @@ export default function HomePage() {
                     </Button>
                     {!token && (
                       <Button
+                        fullWidth={true}
                         variant="text"
                         size="large"
                         onClick={() => navigate('/register')}
@@ -242,11 +255,11 @@ export default function HomePage() {
               </Grid>
 
               {/* Right — Live Status Card */}
-              <Grid size={{ xs: 12, md: 5 }} sx={{ display: { xs: 'none', md: 'block' } }}>
+              <Grid size={{ xs: 12, md: 5 }} sx={{ display: 'block', mt: { xs: 6, md: 0 } }}>
                 <Box
                   component={motion.div}
                   initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  style={{ willChange: 'transform, opacity' }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
                   sx={{ display: 'flex', justifyContent: 'flex-end' }}
                 >
@@ -378,14 +391,14 @@ export default function HomePage() {
         <Container maxWidth="lg">
           <Grid container spacing={4}>
             {[
-              { ref: counter1.ref, value: counter1.count, suffix: '+', label: 'Meja Tersedia', sublabel: 'Berbagai tipe & ukuran', icon: Trophy, color: '#0d9668' },
-              { ref: counter2.ref, value: counter2.count, suffix: '+', label: 'Booking Selesai', sublabel: 'Dan terus bertambah', icon: Users, color: '#2563eb' },
-              { ref: counter3.ref, value: counter3.count, suffix: '%', label: 'Kepuasan Pelanggan', sublabel: 'Rating dari pengguna', icon: Star, color: '#ea580c' },
+              { ref: counter1.ref, value: counter1.count, suffix: '+', label: 'Meja Tersedia', sublabel: 'Berbagai tipe & ukuran', icon: EmojiEventsTwoToneIcon, color: '#0d9668' },
+              { ref: counter2.ref, value: counter2.count, suffix: '+', label: 'Booking Selesai', sublabel: 'Dan terus bertambah', icon: GroupsTwoToneIcon, color: '#2563eb' },
+              { ref: counter3.ref, value: counter3.count, suffix: '%', label: 'Kepuasan Pelanggan', sublabel: 'Rating dari pengguna', icon: StarRoundedIcon, color: '#ea580c' },
             ].map((stat, idx) => (
               <Grid size={{ xs: 12, md: 4 }} key={idx}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                 >
@@ -402,7 +415,7 @@ export default function HomePage() {
                       width: 56, height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center',
                       bgcolor: alpha(stat.color, 0.08), flexShrink: 0,
                     }}>
-                      <stat.icon size={24} color={stat.color} strokeWidth={1.5} />
+                      <stat.icon sx={{ fontSize: 24, color: stat.color }} />
                     </Box>
                     <Box>
                       <Typography variant="h3" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1 }}>
@@ -429,20 +442,20 @@ export default function HomePage() {
           <Box
             component={motion.div}
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.6 }}
             sx={{ mb: 8, maxWidth: 600 }}
           >
-            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 2, display: 'block', mb: 1.5 }}>
+            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 2, display: 'block', mb: 1.5, textAlign: { xs: 'center', md: 'left' } }}>
               KENAPA KAMI?
             </Typography>
-            <Typography variant="h3" sx={{ fontWeight: 800, color: 'grey.900', fontSize: { xs: '1.8rem', md: '2.3rem' }, mb: 2, lineHeight: 1.2 }}>
+            <Typography variant="h3" sx={{ fontWeight: 800, color: 'grey.900', fontSize: { xs: '1.8rem', md: '2.3rem' }, mb: 2, lineHeight: 1.2, textAlign: { xs: 'center', md: 'left' } }}>
               Fokus Bermain,{' '}
               <Box component="span" sx={{ color: 'primary.main' }}>Biar Kami Urus</Box>{' '}
               Sisanya
             </Typography>
-            <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
+            <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, textAlign: { xs: 'center', md: 'left' } }}>
               Sistem booking yang dibangun untuk pengalaman tanpa hambatan — dari pemesanan hingga bermain.
             </Typography>
           </Box>
@@ -457,7 +470,7 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ duration: 0.5, delay: idx * 0.15 }}
-                    style={{ height: '100%' }}
+                    style={{ height: '100%', willChange: 'transform, opacity' }}
                   >
                     <Paper
                       elevation={0}
@@ -479,7 +492,7 @@ export default function HomePage() {
                           width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center',
                           bgcolor: alpha('#0d9668', 0.08), border: '1px solid', borderColor: alpha('#0d9668', 0.15),
                         }}>
-                          <Icon size={22} color="#0d9668" strokeWidth={1.5} />
+                          <Icon sx={{ fontSize: 22, color: '#0d9668' }} />
                         </Box>
                         <Typography className="feature-num" sx={{
                           fontWeight: 800, fontSize: '3rem', lineHeight: 1, color: 'grey.100',
@@ -511,17 +524,17 @@ export default function HomePage() {
               <Box
                 component={motion.div}
                 initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6 }}
               >
-                <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 2, display: 'block', mb: 1.5 }}>
+                <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 2, display: 'block', mb: 1.5, textAlign: { xs: 'center', md: 'left' } }}>
                   CARA KERJA
                 </Typography>
-                <Typography variant="h3" sx={{ fontWeight: 800, mb: 3, fontSize: { xs: '1.8rem', md: '2.3rem' }, lineHeight: 1.2, color: 'grey.900' }}>
+                <Typography variant="h3" sx={{ fontWeight: 800, mb: 3, fontSize: { xs: '1.8rem', md: '2.3rem' }, lineHeight: 1.2, color: 'grey.900', textAlign: { xs: 'center', md: 'left' } }}>
                   3 Langkah Mudah Menuju Meja Billiard
                 </Typography>
-                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4, lineHeight: 1.8 }}>
+                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4, lineHeight: 1.8, textAlign: { xs: 'center', md: 'left' } }}>
                   Kami memangkas birokrasi pemesanan tradisional. Dari layar handphone hingga meja billiard — semuanya super efisien.
                 </Typography>
                 <Box sx={{
@@ -529,7 +542,7 @@ export default function HomePage() {
                   color: 'grey.900', fontWeight: 600, py: 1.5, px: 2.5,
                   bgcolor: alpha('#0d9668', 0.06), border: '1px solid', borderColor: alpha('#0d9668', 0.15),
                 }}>
-                  <ShieldCheck size={18} color="#0d9668" />
+                  <VerifiedUserTwoToneIcon sx={{ fontSize: 18, color: '#0d9668' }} />
                   <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
                     Transaksi 100% Aman & Terenkripsi
                   </Typography>
@@ -539,14 +552,14 @@ export default function HomePage() {
             <Grid size={{ xs: 12, md: 7 }}>
               <Stack spacing={0}>
                 {[
-                  { num: '01', title: 'Registrasi & Login', desc: 'Buat akun gratis dalam hitungan detik. Data Anda tersimpan aman di sistem kami.', icon: Users },
-                  { num: '02', title: 'Pilih Meja & Jadwal', desc: 'Cari meja yang sesuai dengan preferensi dan jam bermain Anda secara real-time.', icon: Calendar },
-                  { num: '03', title: 'Bayar & Main', desc: 'Lakukan pembayaran, E-Ticket langsung aktif. Tunjukkan saat kedatangan.', icon: Zap },
+                  { num: '01', title: 'Registrasi & Login', desc: 'Buat akun gratis dalam hitungan detik. Data Anda tersimpan aman di sistem kami.', icon: GroupsTwoToneIcon },
+                  { num: '02', title: 'Pilih Meja & Jadwal', desc: 'Cari meja yang sesuai dengan preferensi dan jam bermain Anda secara real-time.', icon: CalendarMonthTwoToneIcon },
+                  { num: '03', title: 'Bayar & Main', desc: 'Lakukan pembayaran, E-Ticket langsung aktif. Tunjukkan saat kedatangan.', icon: FlashOnTwoToneIcon },
                 ].map((step, idx) => (
                   <motion.div
                     key={idx}
                     initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ duration: 0.5, delay: idx * 0.15 }}
                   >
@@ -561,7 +574,7 @@ export default function HomePage() {
                         width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
                         bgcolor: alpha('#0d9668', 0.08), flexShrink: 0,
                       }}>
-                        <step.icon size={20} color="#0d9668" strokeWidth={1.5} />
+                        <step.icon sx={{ fontSize: 20, color: '#0d9668' }} />
                       </Box>
                       <Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
@@ -591,10 +604,10 @@ export default function HomePage() {
           <Box
             component={motion.div}
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6 }}
-            sx={{ textAlign: 'center', mb: 6 }}
+            sx={{ textAlign: 'center', mb: { xs: 2, md: 3 }, position: 'relative', zIndex: 10 }}
           >
             <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 700, letterSpacing: 2, display: 'block', mb: 1.5 }}>
               VENUE KAMI
@@ -607,7 +620,7 @@ export default function HomePage() {
             </Typography>
           </Box>
         </Container>
-        <Box sx={{ height: '600px', position: 'relative', width: '100%', overflow: 'hidden' }}>
+        <Box sx={{ height: { xs: '350px', sm: '450px', md: '600px' }, mt: { xs: -4, md: -8 }, position: 'relative', width: '100%', overflow: 'hidden' }}>
           <CircularGallery
             bend={1}
             textColor="#ffffff"
@@ -616,11 +629,11 @@ export default function HomePage() {
             font="bold 30px Orbitron"
             scrollSpeed={2}
             items={[
-              { image: 'https://images.unsplash.com/photo-1595842594411-bd5f3fb58e1c?q=80&w=800&auto=format&fit=crop', text: 'Meja VIP' },
-              { image: 'https://images.unsplash.com/photo-1534158914592-062992fbe900?q=80&w=800&auto=format&fit=crop', text: 'Lounge' },
-              { image: 'https://images.unsplash.com/photo-1579737158739-650a3cc72dc8?q=80&w=800&auto=format&fit=crop', text: 'Lighting' },
-              { image: 'https://images.unsplash.com/photo-1622295627725-d72986427bd6?q=80&w=800&auto=format&fit=crop', text: 'Billiard' },
-              { image: 'https://images.unsplash.com/photo-1614777598822-7772ba6dc042?q=80&w=800&auto=format&fit=crop', text: 'Tournament' }
+              { image: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/Franz_Heinrich_001.jpg', text: 'Meja VIP' },
+              { image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Snooker_table_selby.JPG/960px-Snooker_table_selby.JPG', text: 'Lounge' },
+              { image: 'https://upload.wikimedia.org/wikipedia/commons/0/09/EVD-billar-378.jpg', text: 'Lighting' },
+              { image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Niels_Feijen_NL.JPG/960px-Niels_Feijen_NL.JPG', text: 'Billiard' },
+              { image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Billiard_ball_comparison.jpg/960px-Billiard_ball_comparison.jpg', text: 'Tournament' }
             ]}
           />
         </Box>
@@ -632,7 +645,7 @@ export default function HomePage() {
           <Box
             component={motion.div}
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             sx={{ textAlign: 'center', mb: 8 }}
@@ -672,7 +685,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
-                  style={{ height: '100%' }}
+                  style={{ height: '100%', willChange: 'transform, opacity' }}
                 >
                   <Paper
                     elevation={0}
@@ -687,7 +700,7 @@ export default function HomePage() {
                     {/* Stars */}
                     <Box sx={{ display: 'flex', gap: 0.3, mb: 3 }}>
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />
+                        <StarRoundedIcon key={i} sx={{ fontSize: 18, color: '#F59E0B' }} />
                       ))}
                     </Box>
 
@@ -731,81 +744,48 @@ export default function HomePage() {
         <Box sx={{
           position: 'absolute', top: -100, right: -100, width: 400, height: 400,
           bgcolor: alpha('#0d9668', 0.05), transform: 'rotate(45deg)',
+          display: { xs: 'none', md: 'block' }
         }} />
         <Box sx={{
           position: 'absolute', bottom: -80, left: -80, width: 300, height: 300,
           bgcolor: alpha('#0d9668', 0.03), transform: 'rotate(45deg)',
+          display: { xs: 'none', md: 'block' }
         }} />
 
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           <Box
             component={motion.div}
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            style={{ willChange: 'transform, opacity' }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6 }}
           >
-            <Grid container spacing={6} alignItems="center">
-              <Grid size={{ xs: 12, md: 7 }}>
-                <Typography variant="h3" sx={{ fontWeight: 800, color: '#ffffff', mb: 2, fontSize: { xs: '1.8rem', md: '2.5rem' }, lineHeight: 1.2 }}>
-                  Siap Tingkatkan{' '}
-                  <Box component="span" sx={{ color: 'primary.main' }}>Pengalaman</Box>{' '}
-                  Bermain Anda?
-                </Typography>
-                <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.5)', mb: 4, lineHeight: 1.7, maxWidth: 500 }}>
-                  Jangan biarkan antrean mengganggu waktu bermain. Booking meja sekarang dan nikmati pengalaman billiard premium.
-                </Typography>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    disableElevation
-                    onClick={() => navigate(token ? '/tables' : '/register')}
-                    endIcon={<ArrowRight size={18} />}
-                    sx={{
-                      bgcolor: 'primary.main', color: '#fff', px: 4, py: 1.5,
-                      fontSize: '0.95rem', fontWeight: 700, borderRadius: 0, textTransform: 'none',
-                      '&:hover': { bgcolor: 'primary.dark' },
-                    }}
-                  >
-                    {token ? 'Booking Meja Sekarang' : 'Daftar & Booking Sekarang'}
-                  </Button>
-                </Stack>
-              </Grid>
-
-              {/* Info mini cards */}
-              <Grid size={{ xs: 12, md: 5 }}>
-                <Stack spacing={2}>
-                  {[
-                    { icon: Clock, label: 'Buka Setiap Hari', value: '10.00 — 02.00 WIB' },
-                    { icon: MapPin, label: 'Lokasi', value: 'Jl. Billiard Raya No. 123' },
-                    { icon: Phone, label: 'Hubungi Kami', value: '+62 812-3456-7890' },
-                  ].map((item, idx) => (
-                    <Box key={idx} sx={{
-                      display: 'flex', alignItems: 'center', gap: 2.5, p: 2.5,
-                      bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
-                      transition: 'all 0.3s',
-                      '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.1)' },
-                    }}>
-                      <Box sx={{
-                        width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        bgcolor: alpha('#0d9668', 0.1), flexShrink: 0,
-                      }}>
-                        <item.icon size={18} color="#0d9668" />
-                      </Box>
-                      <Box>
-                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.5, fontSize: '0.65rem' }}>
-                          {item.label}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#fff', fontWeight: 600, fontSize: '0.85rem' }}>
-                          {item.value}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  ))}
-                </Stack>
-              </Grid>
-            </Grid>
+            <Box sx={{ maxWidth: 800, mx: 'auto', textAlign: 'center' }}>
+              <Typography variant="h3" sx={{ fontWeight: 800, color: '#ffffff', mb: 2, fontSize: { xs: '1.8rem', md: '2.5rem' }, lineHeight: 1.2 }}>
+                Siap Tingkatkan{' '}
+                <Box component="span" sx={{ color: 'primary.main' }}>Pengalaman</Box>{' '}
+                Bermain Anda?
+              </Typography>
+              <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.5)', mb: { xs: 3, md: 4 }, lineHeight: 1.7, maxWidth: 600, mx: 'auto' }}>
+                Jangan biarkan antrean mengganggu waktu bermain. Booking meja sekarang dan nikmati pengalaman billiard premium.
+              </Typography>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: { xs: '100%', sm: 'auto' }, justifyContent: 'center', alignItems: 'center' }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  disableElevation
+                  onClick={() => navigate(token ? '/tables' : '/register')}
+                  endIcon={<ArrowForwardIcon fontSize="small" />}
+                  sx={{
+                    bgcolor: 'primary.main', color: '#fff', px: 6, py: 1.5,
+                    fontSize: '1rem', fontWeight: 700, borderRadius: 0, textTransform: 'none',
+                    '&:hover': { bgcolor: 'primary.dark' },
+                  }}
+                >
+                  {token ? 'Booking Meja Sekarang' : 'Daftar & Booking Sekarang'}
+                </Button>
+              </Stack>
+            </Box>
           </Box>
         </Container>
       </Box>

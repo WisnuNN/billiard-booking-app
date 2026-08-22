@@ -28,6 +28,10 @@ php artisan migrate --force 2>&1 || echo "Migration failed or skipped"
 echo "Running database seeders..."
 php artisan db:seed --force 2>&1 || echo "Seeding failed or skipped"
 
+# Generate API Documentation
+echo "Generating Swagger API documentation..."
+php artisan l5-swagger:generate 2>&1 || echo "Swagger generation failed"
+
 echo "=== Application Ready ==="
 
 exec "$@"

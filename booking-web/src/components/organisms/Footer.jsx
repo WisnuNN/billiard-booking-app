@@ -26,10 +26,10 @@ export default function Footer() {
     >
       <Container maxWidth="lg">
         {/* Main Grid Content */}
-        <Grid container spacing={{ xs: 3, md: 4 }} alignItems="flex-start" sx={{ mb: 3 }}>
+        <Grid container spacing={{ xs: 5, md: 4 }} sx={{ mb: 4 }}>
           {/* Col 1: Brand & Status */}
-          <Grid item xs={12} sm={6} md={4}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, mb: 1.2 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} sx={{ textAlign: 'left' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, mb: 1.5 }}>
               <Box
                 component="img"
                 src="/baccarat-logo.png"
@@ -57,7 +57,7 @@ export default function Footer() {
               />
             </Box>
 
-            <Typography variant="body2" sx={{ color: '#94a3b8', fontSize: '0.8125rem', lineHeight: 1.6, mb: 1.5 }}>
+            <Typography variant="body2" sx={{ color: '#94a3b8', fontSize: '0.8125rem', lineHeight: 1.6, mb: 2, maxWidth: 350 }}>
               Arena billiard modern pertama di Bandung dengan meja turnamen Rasson & sistem booking online real-time.
             </Typography>
 
@@ -67,11 +67,11 @@ export default function Footer() {
           </Grid>
 
           {/* Col 2: Navigation Links */}
-          <Grid item xs={6} sm={3} md={2.5}>
-            <Typography variant="caption" sx={{ color: '#ffffff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', mb: 1.5 }}>
+          <Grid size={{ xs: 6, sm: 3, md: 3 }} sx={{ textAlign: 'left' }}>
+            <Typography variant="caption" sx={{ color: '#ffffff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', mb: 2 }}>
               Navigasi
             </Typography>
-            <Stack spacing={1}>
+            <Stack spacing={1.5} alignItems="flex-start">
               {[
                 { label: 'Beranda', to: '/' },
                 { label: 'Daftar Meja', to: '/tables' },
@@ -101,12 +101,12 @@ export default function Footer() {
           </Grid>
 
           {/* Col 3: Contact & Location */}
-          <Grid item xs={6} sm={3} md={3}>
-            <Typography variant="caption" sx={{ color: '#ffffff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', mb: 1.5 }}>
+          <Grid size={{ xs: 6, sm: 3, md: 3 }} sx={{ textAlign: 'left' }}>
+            <Typography variant="caption" sx={{ color: '#ffffff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', mb: 2 }}>
               Lokasi & CS
             </Typography>
-            <Stack spacing={0.8}>
-              <Typography variant="body2" sx={{ color: '#94a3b8', fontSize: '0.8125rem', lineHeight: 1.4 }}>
+            <Stack spacing={1.5} alignItems="flex-start">
+              <Typography variant="body2" sx={{ color: '#94a3b8', fontSize: '0.8125rem', lineHeight: 1.5, pr: 2 }}>
                 Jl. Riau No. 124, Cihapit, Bandung
               </Typography>
               <Typography
@@ -123,11 +123,11 @@ export default function Footer() {
           </Grid>
 
           {/* Col 4: Social & Payment */}
-          <Grid item xs={12} sm={6} md={2.5}>
-            <Typography variant="caption" sx={{ color: '#ffffff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', mb: 1.5 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} sx={{ textAlign: 'left', mt: { xs: 1, md: 0 } }}>
+            <Typography variant="caption" sx={{ color: '#ffffff', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', mb: 2 }}>
               Sosial Media
             </Typography>
-            <Stack direction="row" spacing={1.5} sx={{ mb: 2 }}>
+            <Stack direction="row" spacing={2} sx={{ mb: 3, justifyContent: 'flex-start' }}>
               {[
                 { label: 'Instagram', href: '#' },
                 { label: 'WhatsApp', href: 'https://wa.me/6281234567890' },
@@ -156,7 +156,7 @@ export default function Footer() {
               ))}
             </Stack>
 
-            <Stack direction="row" spacing={0.8} alignItems="center">
+            <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-start" sx={{ flexWrap: 'wrap', gap: 1 }}>
               <Chip
                 label="QRIS"
                 size="small"
@@ -167,6 +167,7 @@ export default function Footer() {
                   fontSize: '0.7rem',
                   fontWeight: 600,
                   height: 24,
+                  ml: '0 !important'
                 }}
               />
               <Chip
@@ -179,28 +180,29 @@ export default function Footer() {
                   fontSize: '0.7rem',
                   fontWeight: 600,
                   height: 24,
+                  ml: '0 !important'
                 }}
               />
             </Stack>
           </Grid>
         </Grid>
 
-        <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.06)', mb: 2 }} />
+        <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.06)', mb: 3 }} />
 
         {/* Sub-Footer Compact Strip */}
         <Box
           sx={{
             display: 'flex',
             flexDirection: { xs: 'column', sm: 'row' },
-            alignItems: 'center',
+            alignItems: { xs: 'flex-start', sm: 'center' },
             justifyContent: 'space-between',
-            gap: 1,
+            gap: 2,
           }}
         >
-          <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.75rem', textAlign: { xs: 'center', sm: 'left' } }}>
+          <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.75rem', textAlign: 'left' }}>
             © {new Date().getFullYear()} Baccarat Billiard & Lounge. Hak Cipta Dilindungi.
           </Typography>
-          <Stack direction="row" spacing={2.5}>
+          <Stack direction="row" spacing={2.5} sx={{ flexWrap: 'wrap', gap: 1.5 }}>
             {['Syarat & Ketentuan', 'Kebijakan Privasi', 'Bantuan'].map((text) => (
               <Box
                 component="a"
@@ -213,6 +215,7 @@ export default function Footer() {
                   fontWeight: 500,
                   '&:hover': { color: '#cbd5e1' },
                   transition: 'color 0.2s',
+                  ml: '0 !important'
                 }}
               >
                 {text}

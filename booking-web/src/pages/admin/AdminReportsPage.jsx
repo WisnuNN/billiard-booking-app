@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress } from '@mui/material';
+import { Box, Typography, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, CircularProgress, Button } from '@mui/material';
 import { reportAPI } from '../../services/api';
 
 export default function AdminReportsPage() {
@@ -28,9 +28,18 @@ export default function AdminReportsPage() {
 
   return (
     <Box>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: 800 }}>Laporan & Statistik</Typography>
-        <Typography variant="body2" color="text.secondary">Analisis performa bisnis billiard Anda.</Typography>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <Box>
+          <Typography variant="h5" sx={{ fontWeight: 800 }}>Laporan & Statistik</Typography>
+          <Typography variant="body2" color="text.secondary">Analisis performa bisnis billiard Anda.</Typography>
+        </Box>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={() => window.open('http://localhost:4000/download-csv', '_blank')}
+        >
+          Download Laporan CSV
+        </Button>
       </Box>
 
       {loading ? (
