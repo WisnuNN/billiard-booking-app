@@ -47,7 +47,7 @@ const AdminMonitorPage = () => {
   const theme = useTheme();
   const { tables, fetchMonitor, isLoading: tableLoading, error: tableError } = useTableStore();
   const { createWalkInBooking, isLoading: bookingLoading } = useBookingStore();
-  
+
   const [openModal, setOpenModal] = useState(false);
   const [selectedTable, setSelectedTable] = useState(null);
   const [walkInData, setWalkInData] = useState({
@@ -114,9 +114,9 @@ const AdminMonitorPage = () => {
 
   return (
     <Box sx={{ pb: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mb: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'flex-end' }, mb: 4, gap: 2 }}>
         <Box>
-          <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mb: 1 }}>
+          <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mb: 1, fontSize: { xs: '1.75rem', md: '2.125rem' } }}>
             Live Monitor
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -128,7 +128,7 @@ const AdminMonitorPage = () => {
           color="primary"
           onClick={fetchMonitor} 
           disabled={tableLoading}
-          sx={{ borderRadius: 0, textTransform: 'none', px: 3, py: 1, fontWeight: 700 }}
+          sx={{ borderRadius: 0, textTransform: 'none', px: 3, py: 1.2, fontWeight: 700 }}
         >
           {tableLoading ? 'Memuat...' : 'Refresh Status'}
         </Button>
@@ -137,153 +137,193 @@ const AdminMonitorPage = () => {
       {tableError && <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>{tableError}</Alert>}
 
       <Grid container spacing={3}>
-        {tables.map((table) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={table.id}>
-            <Card 
-              elevation={0}
-              sx={{ 
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                borderRadius: 0,
-                border: '1px solid',
-                borderColor: 'divider',
-                borderTop: '4px solid',
-                borderTopColor: table.is_occupied ? 'error.main' : 'success.main',
-                transition: 'all 0.2s ease-in-out',
-                position: 'relative',
-                bgcolor: '#ffffff',
-                '&:hover': {
-                  boxShadow: table.is_occupied ? 'none' : '0 12px 24px rgba(0,0,0,0.06)',
-                }
-              }}
-            >
-              <CardContent sx={{ p: 3, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                {/* Header */}
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3, gap: 1 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, minWidth: 0 }}>
-                    <Box sx={{ 
-                      flexShrink: 0,
-                      width: 42,
-                      height: 42,
-                      border: '1px solid',
-                      borderColor: table.is_occupied ? alpha(theme.palette.error.main, 0.2) : alpha(theme.palette.success.main, 0.2),
-                      bgcolor: table.is_occupied ? alpha(theme.palette.error.main, 0.1) : alpha(theme.palette.success.main, 0.1),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
-                      <TableIcon sx={{ color: table.is_occupied ? 'error.main' : 'success.main', fontSize: 22 }} />
-                    </Box>
-                    <Box sx={{ minWidth: 0 }}>
-                      <Typography variant="h6" fontWeight="800" color="text.primary" sx={{ lineHeight: 1.2 }} noWrap>
-                        Meja {table.table_number}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" fontWeight="700" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, display: 'block' }} noWrap>
-                        {table.type || 'Standard'}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  
-                  <Chip 
-                    size="small"
-                    label={table.is_occupied ? 'Terpakai' : 'Tersedia'} 
-                    sx={{ 
-                      flexShrink: 0,
-                      fontWeight: 800, 
-                      borderRadius: 0,
-                      textTransform: 'uppercase',
-                      fontSize: '0.65rem',
-                      letterSpacing: 0.5,
-                      bgcolor: table.is_occupied ? alpha(theme.palette.error.main, 0.1) : alpha(theme.palette.success.main, 0.1),
-                      color: table.is_occupied ? 'error.main' : 'success.main',
-                      border: '1px solid',
-                      borderColor: table.is_occupied ? alpha(theme.palette.error.main, 0.3) : alpha(theme.palette.success.main, 0.3)
-                    }}
-                  />
-                </Box>
+        {tables.map((table) => {
+          const isOccupied = table.is_occupied;
+          const statusColor = isOccupied ? 'error.main' : 'success.main';
+          const statusBg = isOccupied ? alpha(theme.palette.error.main, 0.05) : alpha(theme.palette.success.main, 0.05);
+          
+          return (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={table.id}>
+              <Card 
+                elevation={0}
+                sx={{ 
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'stretch',
+                  borderRadius: 3,
+                  border: '1px solid',
+                  borderColor: 'grey.200',
+                  transition: 'all 0.2s ease-in-out',
+                  bgcolor: '#ffffff',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.03)',
+                  overflow: 'hidden',
+                  '&:hover': {
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+                    borderColor: 'primary.main',
+                    transform: 'translateY(-2px)'
+                  }
+                }}
+              >
+                {/* Visual Indicator Line */}
+                <Box sx={{ 
+                  bgcolor: statusColor,
+                  width: '100%', height: 4,
+                  flexShrink: 0
+                }} />
 
-                {/* Body Details */}
-                {table.is_occupied && table.active_booking ? (
-                  <Stack spacing={0} sx={{ 
-                    flexGrow: 1,
-                    bgcolor: alpha(theme.palette.error.main, 0.02),
-                    p: 2,
-                    border: '1px dashed',
-                    borderColor: alpha(theme.palette.error.main, 0.2),
-                  }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1.2, borderBottom: '1px solid', borderColor: alpha(theme.palette.error.main, 0.1) }}>
-                      <Typography variant="caption" color="text.secondary" fontWeight="700" sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Pelanggan</Typography>
-                      <Typography variant="body2" fontWeight="800" color="text.primary" noWrap sx={{ maxWidth: '60%', textAlign: 'right' }}>
-                        {table.active_booking.customer_name}
-                      </Typography>
-                    </Box>
-                    
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1.2, borderBottom: '1px solid', borderColor: alpha(theme.palette.error.main, 0.1) }}>
-                      <Typography variant="caption" color="text.secondary" fontWeight="700" sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Sisa Waktu</Typography>
-                      <Typography variant="body2" color="error.main" fontWeight="800">
-                        {formatTimeRemaining(table.time_remaining_minutes)}
-                      </Typography>
-                    </Box>
-                    
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 1.2 }}>
-                       <Typography variant="caption" color="text.secondary" fontWeight="700" sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Sesi</Typography>
-                       <Typography variant="caption" color="text.primary" fontWeight="800">
-                          {table.active_booking.start_time} - {table.active_booking.end_time}
-                       </Typography>
-                    </Box>
-                  </Stack>
-                ) : (
+                <CardContent sx={{ 
+                  p: 3, 
+                  flexGrow: 1, 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  alignItems: 'stretch',
+                  gap: 2.5,
+                  minWidth: 0,
+                  pb: 3,
+                  '&:last-child': { pb: 3 }
+                }}>
+                  {/* Header: Icon, Name, Type, Chip */}
                   <Box sx={{ 
-                    flexGrow: 1,
                     display: 'flex', 
-                    flexDirection: 'column', 
-                    justifyContent: 'center',
-                    bgcolor: alpha(theme.palette.success.main, 0.02),
-                    p: 2,
-                    border: '1px dashed',
-                    borderColor: alpha(theme.palette.success.main, 0.2),
+                    alignItems: 'center', 
+                    justifyContent: 'space-between', 
+                    width: '100%',
+                    flexShrink: 0
                   }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="caption" color="text.secondary" fontWeight="700" sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>Tarif / Jam</Typography>
-                      <Typography variant="body2" color="success.main" fontWeight="800">
-                        {table.price_per_hour_formatted || 'Rp 0'}
-                      </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, minWidth: 0 }}>
+                      <Avatar sx={{ 
+                        width: 48, height: 48, 
+                        bgcolor: statusBg,
+                        color: statusColor,
+                        borderRadius: 2
+                      }}>
+                        <TableIcon />
+                      </Avatar>
+                      <Box sx={{ minWidth: 0 }}>
+                        <Typography variant="h6" fontWeight="800" color="text.primary" sx={{ lineHeight: 1.2, fontSize: '1.1rem' }} noWrap>
+                          Meja {table.table_number}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" fontWeight="700" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, display: 'block' }} noWrap>
+                          {table.type || 'Standard'}
+                        </Typography>
+                      </Box>
                     </Box>
-                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontWeight: 500, lineHeight: 1.6 }}>
-                      Meja dalam keadaan kosong dan siap digunakan.
-                    </Typography>
+                    
+                    {/* Status Chip */}
+                    <Chip 
+                      size="small" 
+                      label={isOccupied ? 'Terpakai' : 'Tersedia'} 
+                      sx={{ 
+                        fontWeight: 700, 
+                        borderRadius: 1.5, 
+                        textTransform: 'uppercase', 
+                        fontSize: '0.65rem',
+                        height: 24,
+                        bgcolor: statusBg,
+                        color: statusColor,
+                      }}
+                    />
                   </Box>
-                )}
-              </CardContent>
 
-              {/* Footer Button */}
-              {table.is_occupied ? (
-                <Button 
-                  variant="contained"
-                  color="error"
-                  fullWidth
-                  disableRipple
-                  disableElevation
-                  sx={{ borderRadius: 0, py: 1.5, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, cursor: 'default', '&:hover': { bgcolor: 'error.main' } }}
-                >
-                  Sedang Bermain
-                </Button>
-              ) : (
-                <Button 
-                  variant="contained"
-                  color="success"
-                  fullWidth
-                  onClick={() => handleOpenModal(table)}
-                  disableElevation
-                  sx={{ borderRadius: 0, py: 1.5, fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1 }}
-                >
-                  Daftar Walk-In
-                </Button>
-              )}
-            </Card>
-          </Grid>
-        ))}
+                  {/* Body Details Section */}
+                  <Box sx={{ 
+                    flexGrow: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    gap: 1.5,
+                    alignItems: 'stretch',
+                    justifyContent: 'center',
+                    bgcolor: alpha(theme.palette.grey[50], 0.5),
+                    p: 2,
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'grey.100'
+                  }}>
+                    {isOccupied && table.active_booking ? (
+                      <>
+                        <Box sx={{ flex: 'auto', minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ textTransform: 'uppercase', width: 'auto' }}>Pelanggan</Typography>
+                          <Typography variant="body2" fontWeight="700" color="text.primary" noWrap sx={{ ml: 0 }}>
+                            {table.active_booking.customer_name}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ flex: 'auto', minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ textTransform: 'uppercase', width: 'auto' }}>Sisa Waktu</Typography>
+                          <Typography variant="body2" color="error.main" fontWeight="800" sx={{ ml: 0 }}>
+                            {formatTimeRemaining(table.time_remaining_minutes)}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ flex: 'auto', minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ textTransform: 'uppercase', width: 'auto' }}>Sesi</Typography>
+                          <Typography variant="caption" color="text.primary" fontWeight="700" sx={{ ml: 0 }}>
+                            {table.active_booking.start_time} - {table.active_booking.end_time}
+                          </Typography>
+                        </Box>
+                      </>
+                    ) : (
+                      <>
+                        <Box sx={{ flex: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Typography variant="caption" color="text.secondary" fontWeight="600" sx={{ textTransform: 'uppercase', width: 'auto' }}>Tarif / Jam</Typography>
+                          <Typography variant="body2" color="success.main" fontWeight="800" sx={{ ml: 0 }}>
+                            {table.price_per_hour_formatted || 'Rp 0'}
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontWeight: 500, flex: 'auto', mt: 0.5 }}>
+                          Meja kosong dan siap digunakan untuk sesi berikutnya.
+                        </Typography>
+                      </>
+                    )}
+                  </Box>
+
+                  {/* Action Button */}
+                  <Box sx={{ 
+                    flexShrink: 0,
+                    width: '100%',
+                    mt: 'auto'
+                  }}>
+                    {isOccupied ? (
+                      <Button 
+                        variant="contained"
+                        color="error"
+                        fullWidth
+                        disableElevation
+                        sx={{ 
+                          borderRadius: 2, 
+                          py: 1.2,
+                          px: 2,
+                          fontWeight: 700, 
+                          textTransform: 'none',
+                          cursor: 'default', 
+                          '&:hover': { bgcolor: 'error.main' } 
+                        }}
+                      >
+                        Sedang Bermain
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant="contained"
+                        color="success"
+                        fullWidth
+                        onClick={() => handleOpenModal(table)}
+                        disableElevation
+                        sx={{ 
+                          borderRadius: 2, 
+                          py: 1.2, 
+                          px: 2,
+                          fontWeight: 700, 
+                          textTransform: 'none',
+                        }}
+                      >
+                        Daftar Walk-In
+                      </Button>
+                    )}
+                  </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
 
       {/* Modal Walk-in / Success */}
