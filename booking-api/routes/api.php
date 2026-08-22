@@ -9,6 +9,16 @@ use App\Http\Controllers\Api\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/health-check', function () {
+    // Dump raw environment variables to diagnose Railway connection
+    $envVars = [];
+    foreach ($_SERVER as $key => $value) {
+        if (str_starts_with($key, 'DB_') || str_starts_with($key, 'MYSQL') || str_starts_with($key, 'APP_')) {
+            $envVars[$key] = $key === 'DB_PASSWORD' || $key === 'MYSQLPASSWORD' || $key === 'MYSQL_ROOT_PASSWORD'
+                ? '***hidden***'
+                : $value;
+        }
+    }
+
     try {
         \Illuminate\Support\Facades\DB::connection()->getPdo();
         $dbDriver = \Illuminate\Support\Facades\DB::connection()->getDriverName();
@@ -20,19 +30,22 @@ Route::get('/health-check', function () {
             'database' => 'connected',
             'driver' => $dbDriver,
             'tables_count' => count($tables),
+            'env_vars' => $envVars,
         ]);
     } catch (\Throwable $e) {
         return response()->json([
             'status' => 'error',
             'database' => 'connection_failed',
             'error_message' => $e->getMessage(),
-            'db_config' => [
+            'resolved_config' => [
                 'connection' => config('database.default'),
                 'host' => config('database.connections.mysql.host'),
                 'port' => config('database.connections.mysql.port'),
                 'database' => config('database.connections.mysql.database'),
                 'username' => config('database.connections.mysql.username'),
-            ]
+                'url' => config('database.connections.mysql.url') ? 'SET' : 'NOT_SET',
+            ],
+            'env_vars' => $envVars,
         ], 500);
     }
 });
