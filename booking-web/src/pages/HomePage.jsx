@@ -111,10 +111,10 @@ export default function HomePage() {
                     sx={{
                       display: 'inline-flex', alignItems: 'center', gap: 1,
                       bgcolor: 'rgba(13,150,104,0.15)', border: '1px solid rgba(13,150,104,0.25)',
-                      px: 2, py: 0.8, mb: 3,
+                      px: 2, py: 0.8, mb: 3, borderRadius: '100px',
                     }}
                   >
-                    <Box sx={{ width: 6, height: 6, bgcolor: '#0d9668', animation: 'pulse 2s infinite',
+                    <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#0d9668', animation: 'pulse 2s infinite',
                       '@keyframes pulse': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.4 } }
                     }} />
                     <Typography variant="caption" sx={{ color: '#0d9668', fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', fontSize: '0.7rem' }}>
@@ -167,7 +167,7 @@ export default function HomePage() {
                       onClick={() => navigate('/tables')}
                       endIcon={<ArrowForwardIcon fontSize="small" />}
                       sx={{
-                        px: 4, py: 1.8, fontSize: '0.95rem', borderRadius: 0, fontWeight: 700,
+                        px: 4, py: 1.8, fontSize: '0.95rem', borderRadius: 4, fontWeight: 700,
                         bgcolor: 'primary.main', color: '#fff', textTransform: 'none',
                         position: 'relative', overflow: 'hidden',
                         '&:hover': { bgcolor: 'primary.dark' },
@@ -189,7 +189,7 @@ export default function HomePage() {
                         size="large"
                         onClick={() => navigate('/register')}
                         sx={{
-                          px: 3, py: 1.5, fontSize: '0.95rem', borderRadius: 0, fontWeight: 600,
+                          px: 3, py: 1.5, fontSize: '0.95rem', borderRadius: 4, fontWeight: 600,
                           color: 'rgba(255,255,255,0.7)', textTransform: 'none',
                           '&:hover': { color: '#fff', bgcolor: 'rgba(255,255,255,0.05)' },
                         }}
@@ -213,7 +213,7 @@ export default function HomePage() {
                   <Paper
                     elevation={0}
                     sx={{
-                      p: 0, width: '100%', maxWidth: 400, borderRadius: 0,
+                      p: 0, width: '100%', maxWidth: 400, borderRadius: 4,
                       bgcolor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
                       backdropFilter: 'blur(20px)', overflow: 'hidden',
                     }}
@@ -221,7 +221,7 @@ export default function HomePage() {
                     {/* Header bar */}
                     <Box sx={{ px: 3, py: 2, borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                        <Box sx={{ width: 8, height: 8, bgcolor: '#22c55e', animation: 'pulse 2s infinite' }} />
+                        <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22c55e', animation: 'pulse 2s infinite' }} />
                         <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', fontSize: '0.7rem' }}>
                           Live Status
                         </Typography>
@@ -268,6 +268,7 @@ export default function HomePage() {
                             bgcolor: item.available ? 'rgba(13,150,104,0.15)' : 'rgba(255,255,255,0.05)',
                             border: '1px solid',
                             borderColor: item.available ? 'rgba(13,150,104,0.3)' : 'rgba(255,255,255,0.08)',
+                            borderRadius: '100px',
                           }}>
                             <Typography sx={{
                               fontSize: '0.6rem', fontWeight: 700, letterSpacing: 0.5,
