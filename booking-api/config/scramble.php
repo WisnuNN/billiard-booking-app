@@ -48,12 +48,24 @@ return [
         /*
          * API version.
          */
-        'version' => env('API_VERSION', '0.0.1'),
+        'version' => env('API_VERSION', '1.0.0'),
 
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => 'This API provides an enterprise-grade backend infrastructure designed to streamline and automate billiard center operations. Built with a focus on high performance, security, and scalability.',
+        'description' => <<<DESC
+Selamat datang di Dokumentasi Resmi API **Baccarat Billiard & Lounge**.
+
+API ini dirancang khusus untuk memfasilitasi integrasi dan pengelolaan operasional billiard yang terpusat secara digital. Menggunakan arsitektur RESTful yang rapi dan dukungan WebSocket secara *real-time*, sistem ini memastikan setiap data pemesanan, transaksi, dan status meja selalu sinkron dan akurat hingga hitungan detik.
+
+### Fitur Unggulan:
+- **Sinkronisasi Real-Time (WebSocket)**: Status ketersediaan meja otomatis ter-update (*live*) tanpa *refresh* menggunakan Laravel Reverb.
+- **Alur Reservasi Fleksibel**: Mendukung *booking online* maupun tamu *walk-in* langsung di lokasi.
+- **Manajemen Operasional**: Kontrol penuh untuk admin mulai dari pengelolaan meja, pengaturan tarif per jam, hingga pencetakan struk dan laporan.
+- **Keamanan Ketat**: Endpoint yang membutuhkan akses dienkripsi menggunakan autentikasi *Bearer Token* berbasis Laravel Sanctum.
+
+Gunakan menu di sebelah kiri untuk menelusuri detail setiap *endpoint*, parameter yang dibutuhkan, dan contoh respons yang akan diterima.
+DESC,
     ],
 
     'ui' => [
