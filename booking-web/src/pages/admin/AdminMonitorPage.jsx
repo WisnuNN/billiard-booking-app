@@ -61,11 +61,20 @@ const AdminMonitorPage = () => {
 
   useEffect(() => {
     fetchMonitor();
-    // const interval = setInterval(() => {
-    //   fetchMonitor();
-    // }, 60000);
+    
+    // Listen to WebSocket for real-time updates
+    import('../../utils/echo').then(({ default: echo }) => {
+      echo.channel('tables')
+        .listen('TableStatusUpdated', () => {
+          fetchMonitor(); // Refetch all monitor data when any table changes
+        });
+    }).catch(err => console.error("Failed to load echo", err));
 
-    // return () => clearInterval(interval);
+    return () => {
+      import('../../utils/echo').then(({ default: echo }) => {
+        echo.leaveChannel('tables');
+      }).catch(err => console.error("Failed to load echo", err));
+    };
   }, [fetchMonitor]);
 
   const handleOpenModal = (table) => {

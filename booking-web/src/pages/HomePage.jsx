@@ -15,6 +15,7 @@ import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
 import PhoneInTalkTwoToneIcon from '@mui/icons-material/PhoneInTalkTwoTone';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import useAuthStore from '../stores/authStore';
+import useTableStore from '../stores/tableStore';
 import CircularGallery from '../components/organisms/CircularGallery';
 import BilliardBg from '../assets/billiard-bg.jpg';
 
@@ -46,6 +47,51 @@ export default function HomePage() {
   const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
+  const { tables, fetchMonitor, initWebSocket, cleanupWebSocket } = useTableStore();
+
+  useEffect(() => {
+    fetchMonitor();
+    
+    // Inisialisasi WebSocket untuk Live Status
+    if (initWebSocket) initWebSocket();
+    
+    // Listen to TableStatusUpdated event and refetch monitor to be safe, just like in AdminMonitorPage
+    const setupRealtime = async () => {
+      try {
+        const { default: echo } = await import('../utils/echo');
+        echo.channel('tables').listen('TableStatusUpdated', () => {
+          fetchMonitor();
+        });
+      } catch (err) {
+        console.error("Failed to load echo", err);
+      }
+    };
+    setupRealtime();
+
+    return () => {
+      if (cleanupWebSocket) cleanupWebSocket();
+      import('../utils/echo').then(({ default: echo }) => {
+        echo.leaveChannel('tables');
+      }).catch(err => console.error(err));
+    };
+  }, [fetchMonitor, initWebSocket, cleanupWebSocket]);
+
+  // Urutkan meja: yang kosong ditaruh di atas, lalu urut berdasarkan nomor meja
+  const liveStatusTables = [...tables]
+    .sort((a, b) => {
+      if (a.is_occupied !== b.is_occupied) {
+        return a.is_occupied ? 1 : -1; // Tersedia (false) di atas
+      }
+      return a.table_number - b.table_number;
+    })
+    .map(table => ({
+      num: table.table_number.toString().padStart(2, '0'),
+      name: table.name,
+      type: table.type || 'Standard',
+      price: new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(table.price_per_hour) + '/jam',
+      status: table.is_occupied ? 'Sedang Dipakai' : 'Tersedia',
+      available: !table.is_occupied
+    }));
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', overflowX: 'hidden' }}>
@@ -232,13 +278,9 @@ export default function HomePage() {
                     </Box>
 
                     {/* Table rows */}
-                    <Stack spacing={0}>
-                      {[
-                        { num: '01', name: 'Meja VIP', type: 'Premium', price: 'Rp 150K/jam', status: 'Tersedia', available: true },
-                        { num: '02', name: 'Meja Reguler', type: 'Standard', price: 'Rp 75K/jam', status: 'Sedang Dipakai', available: false },
-                        { num: '03', name: 'Meja VIP', type: 'Premium', price: 'Rp 150K/jam', status: 'Tersedia', available: true },
-                        { num: '04', name: 'Meja Reguler', type: 'Standard', price: 'Rp 75K/jam', status: 'Tersedia', available: true },
-                      ].map((item, idx) => (
+                    <Stack spacing={0} sx={{ maxHeight: 320, overflowY: 'auto', '&::-webkit-scrollbar': { width: '4px' }, '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.2)', borderRadius: '4px' } }}>
+
+                      {liveStatusTables.length > 0 ? liveStatusTables.map((item, idx) => (
                         <Box
                           key={idx}
                           sx={{
@@ -279,7 +321,11 @@ export default function HomePage() {
                             </Typography>
                           </Box>
                         </Box>
-                      ))}
+                      )) : (
+                        <Box sx={{ p: 4, textAlign: 'center' }}>
+                           <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>Memuat data meja...</Typography>
+                        </Box>
+                      )}
                     </Stack>
 
                     {/* Footer */}

@@ -58,10 +58,7 @@ Route::get('/health-check', function () {
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-    Route::get('/tables/monitor', [TableController::class, 'monitor']);
-});
-
+Route::get('/tables/monitor', [TableController::class, 'monitor']);
 Route::get('/tables', [TableController::class, 'index']);
 Route::get('/tables/{table}', [TableController::class, 'show']);
 Route::get('/tables/{table}/schedules', [ScheduleController::class, 'index']);

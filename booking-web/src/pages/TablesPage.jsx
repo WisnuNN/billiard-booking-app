@@ -34,6 +34,18 @@ export default function TablesPage() {
 
   useEffect(() => {
     fetchTables({ search: search || undefined, type: type || undefined, page, limit: 12 });
+    
+    // Inisialisasi WebSocket
+    const store = useTableStore.getState();
+    if (store.initWebSocket) {
+      store.initWebSocket();
+    }
+    
+    return () => {
+      if (store.cleanupWebSocket) {
+        store.cleanupWebSocket();
+      }
+    };
   }, [search, type, page, fetchTables]);
 
   return (

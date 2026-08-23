@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Events\TableStatusUpdated;
 use OpenApi\Attributes as OA;
 
 class BookingController extends Controller
@@ -161,6 +162,7 @@ class BookingController extends Controller
         ]);
 
         $booking->load(['user', 'table', 'transaction']);
+        TableStatusUpdated::dispatch($booking->table);
 
         return response()->json([
             'success' => true,
@@ -261,6 +263,7 @@ class BookingController extends Controller
         }
 
         $booking->load(['user', 'table', 'transaction']);
+        TableStatusUpdated::dispatch($booking->table);
 
         return response()->json([
             'success' => true,
@@ -321,6 +324,9 @@ class BookingController extends Controller
             'payment_id' => 'MOCK-' . $booking->id . '-' . time(),
         ]);
 
+        $booking->load(['table']);
+        TableStatusUpdated::dispatch($booking->table);
+
         return response()->json([
             'success' => true,
             'message' => 'Pembayaran berhasil dikonfirmasi secara manual.',
@@ -361,6 +367,7 @@ class BookingController extends Controller
 
         $booking->update(['status' => 'confirmed']);
         $booking->load(['user', 'table', 'transaction']);
+        TableStatusUpdated::dispatch($booking->table);
 
         return response()->json([
             'success' => true,
@@ -402,6 +409,7 @@ class BookingController extends Controller
 
         $booking->update(['status' => 'completed']);
         $booking->load(['user', 'table', 'transaction']);
+        TableStatusUpdated::dispatch($booking->table);
 
         return response()->json([
             'success' => true,
@@ -484,6 +492,7 @@ class BookingController extends Controller
         ]);
 
         $booking->load(['user', 'table', 'transaction']);
+        TableStatusUpdated::dispatch($booking->table);
 
         $message = $payNow 
             ? 'Booking Walk-in berhasil dibuat dan telah dibayar tunai.'
@@ -530,7 +539,12 @@ class BookingController extends Controller
             $booking->transaction->delete();
         }
 
+        $table = $booking->table;
         $booking->delete();
+
+        if ($table) {
+            TableStatusUpdated::dispatch($table);
+        }
 
         if (Booking::count() === 0) {
             \Illuminate\Support\Facades\DB::statement('ALTER TABLE bookings AUTO_INCREMENT = 1');

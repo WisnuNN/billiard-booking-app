@@ -105,10 +105,10 @@ export default function BookingDetailPage() {
         <Skeleton width={120} height={25} sx={{ mb: 2 }} />
         <Skeleton variant="rectangular" height={80} sx={{ borderRadius: 3, mb: 3 }} />
         <Grid container spacing={3}>
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Skeleton variant="rectangular" height={250} sx={{ borderRadius: 3 }} />
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Skeleton variant="rectangular" height={250} sx={{ borderRadius: 3 }} />
           </Grid>
         </Grid>
@@ -126,8 +126,8 @@ export default function BookingDetailPage() {
   const priceStr = b.total_price_formatted.replace('-', '');
 
   return (
-    <Box sx={{ py: { xs: 4, md: 5 }, px: { xs: 2, sm: 3 }, bgcolor: '#f4f6f8', minHeight: '100vh' }}>
-      <Container maxWidth="md">
+    <Box sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, sm: 3 }, bgcolor: '#f4f6f8', minHeight: '100vh' }}>
+      <Container maxWidth="lg">
         
         {/* Navigation */}
         <Button
@@ -218,77 +218,84 @@ export default function BookingDetailPage() {
           </Box>
         </Paper>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="stretch">
           
           {/* Left Column: Booking Details */}
-          <Grid item xs={12} md={7}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Paper 
               elevation={0} 
               sx={{ 
-                p: { xs: 2.5, sm: 3 },
-                borderRadius: 3, 
+                p: { xs: 2, sm: 4 },
+                borderRadius: 4, 
                 border: '1px solid', 
                 borderColor: 'grey.200',
                 height: '100%',
                 bgcolor: '#ffffff',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.02)'
+                boxShadow: '0 10px 30px rgba(0,0,0,0.03)'
               }}
             >
-              <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ p: 0.75, borderRadius: 1.5, bgcolor: alpha(theme.palette.primary.main, 0.1), color: 'primary.main', display: 'flex' }}>
-                  <MapPin size={18} />
+              <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Box sx={{ p: 1, borderRadius: 2, bgcolor: alpha(theme.palette.primary.main, 0.1), color: 'primary.main', display: 'flex' }}>
+                  <FileText size={20} />
                 </Box>
-                Informasi Meja & Waktu
+                Informasi Booking
               </Typography>
               
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 3, sm: 4 } }}>
                 {/* Table Info */}
-                <Box>
-                  <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    Tipe Meja
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 800, color: 'text.primary', letterSpacing: '-0.01em' }}>
-                      {b.table?.name || '-'}
+                <Box sx={{ display: 'flex', gap: { xs: 1.5, sm: 3 }, alignItems: 'center', p: { xs: 2, sm: 3 }, borderRadius: 3, bgcolor: '#f8fafc', border: '1px solid', borderColor: 'grey.100' }}>
+                  <Box sx={{ width: { xs: 52, sm: 64 }, height: { xs: 52, sm: 64 }, borderRadius: 3, bgcolor: 'primary.main', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0, boxShadow: `0 8px 16px ${alpha(theme.palette.primary.main, 0.2)}` }}>
+                    <Typography variant="h6" sx={{ fontWeight: 900, fontSize: { xs: '0.9rem', sm: '1.25rem' } }}>
+                      {b.table?.table_number}
                     </Typography>
-                    {b.table?.type && (
-                      <Chip 
-                        label={b.table.type.toUpperCase()} 
-                        size="small"
-                        color={b.table.type.toLowerCase() === 'vip' ? 'warning' : 'default'}
-                        sx={{ fontWeight: 800, borderRadius: 1, height: 22, fontSize: '0.65rem' }} 
-                      />
-                    )}
+                  </Box>
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', mb: 0.5, display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                      Meja yang Dipesan
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+                      <Typography variant="h6" sx={{ fontWeight: 800, color: 'text.primary', letterSpacing: '-0.01em', wordBreak: 'break-word', fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
+                        {b.table?.name || '-'}
+                      </Typography>
+                      {b.table?.type && (
+                        <Chip 
+                          label={b.table.type.toUpperCase()} 
+                          size="small"
+                          color={b.table.type.toLowerCase() === 'vip' || b.table.type.toLowerCase() === 'vvip' ? 'warning' : 'default'}
+                          sx={{ fontWeight: 800, borderRadius: 1.5, height: 22, fontSize: '0.65rem' }} 
+                        />
+                      )}
+                    </Box>
                   </Box>
                 </Box>
 
                 {/* Schedule Grid */}
                 <Box>
-                  <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1, display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', mb: 1.5, display: 'block', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                     Jadwal Bermain
                   </Typography>
-                  <Grid container spacing={1.5}>
-                    <Grid item xs={12} sm={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5, borderRadius: 2, bgcolor: alpha(theme.palette.primary.main, 0.04), border: '1px solid', borderColor: alpha(theme.palette.primary.main, 0.1) }}>
-                        <Box sx={{ color: 'primary.main', display: 'flex' }}>
-                          <CalendarDays size={18} />
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: { xs: 1.5, sm: 2 }, borderRadius: 3, bgcolor: '#ffffff', border: '1px solid', borderColor: 'grey.200' }}>
+                        <Box sx={{ width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 }, borderRadius: 2, bgcolor: alpha(theme.palette.primary.main, 0.08), color: 'primary.main', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <CalendarDays size={20} />
                         </Box>
-                        <Box>
+                        <Box sx={{ minWidth: 0 }}>
                           <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', fontWeight: 600 }}>Tanggal</Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 700 }}>
-                            {new Date(b.booking_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          <Typography variant="body1" sx={{ fontWeight: 800, fontSize: { xs: '0.95rem', sm: '1rem' } }}>
+                            {new Date(b.booking_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                           </Typography>
                         </Box>
                       </Box>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5, borderRadius: 2, bgcolor: alpha(theme.palette.secondary.main, 0.04), border: '1px solid', borderColor: alpha(theme.palette.secondary.main, 0.1) }}>
-                        <Box sx={{ color: 'secondary.main', display: 'flex' }}>
-                          <Clock size={18} />
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: { xs: 1.5, sm: 2 }, borderRadius: 3, bgcolor: '#ffffff', border: '1px solid', borderColor: 'grey.200' }}>
+                        <Box sx={{ width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 }, borderRadius: 2, bgcolor: alpha(theme.palette.secondary.main, 0.08), color: 'secondary.main', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <Clock size={20} />
                         </Box>
-                        <Box>
+                        <Box sx={{ minWidth: 0 }}>
                           <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', fontWeight: 600 }}>Waktu Sesi</Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 700 }}>
+                          <Typography variant="body1" sx={{ fontWeight: 800, fontSize: { xs: '0.95rem', sm: '1rem' } }}>
                             {b.start_time.substring(0, 5)} - {b.end_time.substring(0, 5)}
                           </Typography>
                         </Box>
@@ -317,68 +324,68 @@ export default function BookingDetailPage() {
           </Grid>
 
           {/* Right Column: Payment & Action */}
-          <Grid item xs={12} md={5}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, position: 'sticky', top: 32 }}>
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, position: 'sticky', top: 32 }}>
               
               <Paper
                 elevation={0}
                 sx={{
-                  p: { xs: 2.5, sm: 3 },
-                  borderRadius: 3,
+                  p: { xs: 2.5, sm: 4 },
+                  borderRadius: 4,
                   border: '1px solid',
                   borderColor: 'grey.200',
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
                   bgcolor: '#ffffff'
                 }}
               >
-                <Typography variant="subtitle1" sx={{ fontWeight: 800, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ p: 0.75, borderRadius: 1.5, bgcolor: alpha(theme.palette.success.main, 0.1), color: 'success.main', display: 'flex' }}>
-                    <CreditCard size={18} />
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 4, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <Box sx={{ p: 1, borderRadius: 2, bgcolor: alpha(theme.palette.success.main, 0.1), color: 'success.main', display: 'flex' }}>
+                    <CreditCard size={20} />
                   </Box>
                   Rincian Tagihan
                 </Typography>
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 600 }}>Status Bayar</Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                  <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 600 }}>Status Bayar</Typography>
                   <StatusBadge status={b.transaction?.payment_status || 'unpaid'} />
                 </Box>
 
-                <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: '#f4f6f8', mb: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>Harga per jam</Typography>
-                    <Typography variant="body2" fontWeight={700}>
+                <Box sx={{ p: { xs: 2, sm: 2.5 }, borderRadius: 3, bgcolor: '#f8fafc', mb: 3, border: '1px dashed', borderColor: 'grey.300' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}>
+                    <Typography variant="body2" color="text.secondary" fontWeight={600}>Tarif per jam</Typography>
+                    <Typography variant="body2" fontWeight={800}>
                       {b.table?.price_per_hour_formatted || '-'}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="body2" color="text.secondary" fontWeight={500}>Total Durasi</Typography>
-                    <Typography variant="body2" fontWeight={700}>
+                    <Typography variant="body2" color="text.secondary" fontWeight={600}>Total Durasi</Typography>
+                    <Typography variant="body2" fontWeight={800}>
                       {durationStr}
                     </Typography>
                   </Box>
                 </Box>
 
-                <Divider sx={{ borderStyle: 'dashed', my: 2, borderColor: 'grey.300' }} />
+                <Divider sx={{ borderStyle: 'dashed', my: 2.5, borderColor: 'grey.300' }} />
 
                 <Box 
                   sx={{ 
-                    p: 2, 
-                    borderRadius: 2, 
+                    p: { xs: 2, sm: 3 }, 
+                    borderRadius: 3, 
                     background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
                     border: '1px solid',
                     borderColor: alpha(theme.palette.primary.main, 0.15),
-                    mt: 2,
+                    mt: { xs: 2, sm: 3 },
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: 0.5
+                    gap: 1
                   }}
                 >
-                  <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 700, lineHeight: 1, letterSpacing: '0.1em' }}>
+                  <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 800, lineHeight: 1, letterSpacing: '0.15em' }}>
                     TOTAL TAGIHAN
                   </Typography>
-                  <Typography variant="h5" sx={{ fontWeight: 900, color: 'primary.main', letterSpacing: '-0.02em' }}>
+                  <Typography variant="h4" sx={{ fontWeight: 900, color: 'primary.main', letterSpacing: '-0.02em' }}>
                     {priceStr}
                   </Typography>
                 </Box>
@@ -417,30 +424,29 @@ export default function BookingDetailPage() {
                 )}
               </Paper>
               
-              {canCancel && (
-                <Button
-                  variant="outlined"
-                  color="error"
-                  fullWidth
-                  startIcon={<AlertCircle size={16} />}
-                  onClick={() => setShowCancel(true)}
-                  sx={{ 
-                    borderRadius: 2, 
-                    fontWeight: 800, 
-                    py: 1,
-                    textTransform: 'none',
-                    fontSize: '0.9rem',
-                    borderWidth: 2,
-                    bgcolor: '#ffffff',
-                    '&:hover': {
+              {canCancel && <Button
+                    variant="outlined"
+                    color="error"
+                    fullWidth
+                    startIcon={<AlertCircle size={18} />}
+                    onClick={() => setShowCancel(true)}
+                    sx={{ 
+                      borderRadius: 3, 
+                      fontWeight: 800, 
+                      py: 1.5,
+                      textTransform: 'none',
+                      fontSize: '1rem',
                       borderWidth: 2,
-                      bgcolor: alpha(theme.palette.error.main, 0.05),
-                    }
-                  }}
-                >
-                  Batalkan Pesanan Ini
-                </Button>
-              )}
+                      bgcolor: '#ffffff',
+                      '&:hover': {
+                        borderWidth: 2,
+                        bgcolor: alpha(theme.palette.error.main, 0.05),
+                      }
+                    }}
+                  >
+                    Batalkan Pesanan Ini
+                  </Button>
+              }
             </Box>
           </Grid>
         </Grid>

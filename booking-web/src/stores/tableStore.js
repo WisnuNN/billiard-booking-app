@@ -106,6 +106,30 @@ const useTableStore = create((set) => ({
 
   clearError: () => set({ error: null }),
   clearCurrent: () => set({ currentTable: null, availability: null }),
+
+  initWebSocket: () => {
+    import('../utils/echo').then(({ default: echo }) => {
+      echo.channel('tables')
+        .listen('TableStatusUpdated', (e) => {
+          set((state) => {
+            // Update table in the tables list
+            const updatedTables = state.tables.map(t => 
+              t.id === e.table.id ? { ...t, ...e.table } : t
+            );
+            
+            // If monitoring, we also need to trigger a refetch because monitor has different structure
+            // Or we just update the specific fields if possible, but fetchMonitor is safer
+            return { tables: updatedTables };
+          });
+        });
+    }).catch(err => console.error("Failed to load echo", err));
+  },
+
+  cleanupWebSocket: () => {
+    import('../utils/echo').then(({ default: echo }) => {
+      echo.leaveChannel('tables');
+    }).catch(err => console.error("Failed to load echo", err));
+  },
 }));
 
 export default useTableStore;

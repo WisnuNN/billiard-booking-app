@@ -137,7 +137,7 @@ export default function AdminDashboardPage() {
       <Box sx={{ mb: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'flex-end' }, gap: { xs: 2, sm: 0 } }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 800, color: 'text.primary', mb: 0.5, letterSpacing: '-0.02em', fontSize: { xs: '1.75rem', md: '2.125rem' } }}>
-            {greeting} 👋
+            {greeting} 
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
             {today} — Dashboard Billiard Booking System

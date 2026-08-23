@@ -10,6 +10,7 @@
         "darkaonline/l5-swagger": "^11.1",
         "dedoc/scramble": "*",
         "laravel/framework": "^13.8",
+        "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0"
     },

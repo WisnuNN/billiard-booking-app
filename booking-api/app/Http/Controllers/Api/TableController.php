@@ -9,6 +9,7 @@ use App\Http\Resources\TableResource;
 use App\Models\Table;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Events\TableStatusUpdated;
 use OpenApi\Attributes as OA;
 
 class TableController extends Controller
@@ -155,6 +156,7 @@ class TableController extends Controller
     public function store(StoreTableRequest $request): JsonResponse
     {
         $table = Table::create($request->validated());
+        TableStatusUpdated::dispatch($table);
 
         return response()->json([
             'success' => true,
@@ -202,6 +204,7 @@ class TableController extends Controller
     public function update(UpdateTableRequest $request, Table $table): JsonResponse
     {
         $table->update($request->validated());
+        TableStatusUpdated::dispatch($table);
 
         return response()->json([
             'success' => true,
@@ -291,14 +294,13 @@ class TableController extends Controller
     )]
     public function monitor(Request $request): JsonResponse
     {
-        if (! $request->user()->isAdmin()) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
-        }
+        $user = $request->user('sanctum');
+        $isAdmin = $user && $user->isAdmin();
 
         $now = \Carbon\Carbon::now();
         $date = $now->format('Y-m-d');
 
-        $tables = Table::active()->orderBy('table_number')->get()->map(function ($table) use ($date, $now) {
+        $tables = Table::active()->orderBy('table_number')->get()->map(function ($table) use ($date, $now, $isAdmin) {
             $activeBooking = $table->bookings()
                 ->with('user')
                 ->where('booking_date', $date)
@@ -330,12 +332,12 @@ class TableController extends Controller
                 'type' => $table->type,
                 'price_per_hour' => $table->price_per_hour,
                 'is_occupied' => $activeBooking ? true : false,
-                'time_remaining_minutes' => $timeRemaining,
+                'time_remaining_minutes' => $isAdmin ? $timeRemaining : null,
                 'active_booking' => $activeBooking ? [
                     'id' => $activeBooking->id,
-                    'customer_name' => $activeBooking->notes && str_starts_with($activeBooking->notes, 'Walk-in: ')
+                    'customer_name' => $isAdmin ? ($activeBooking->notes && str_starts_with($activeBooking->notes, 'Walk-in: ')
                         ? str_replace('Walk-in: ', '', $activeBooking->notes)
-                        : ($activeBooking->user ? $activeBooking->user->name : 'Walk-in'),
+                        : ($activeBooking->user ? $activeBooking->user->name : 'Walk-in')) : 'Anonymous',
                     'start_time' => \Carbon\Carbon::parse($activeBooking->start_time)->format('H:i'),
                     'end_time' => \Carbon\Carbon::parse($activeBooking->end_time)->format('H:i'),
                 ] : null,
