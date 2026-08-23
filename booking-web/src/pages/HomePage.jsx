@@ -36,26 +36,7 @@ const features = [
   },
 ];
 
-// Marquee component for social proof
-function Marquee({ children, speed = 30 }) {
-  return (
-    <Box sx={{ overflow: 'hidden', whiteSpace: 'nowrap', position: 'relative' }}>
-      <Box
-        sx={{
-          display: 'inline-flex',
-          animation: `marquee ${speed}s linear infinite`,
-          '@keyframes marquee': {
-            '0%': { transform: 'translateX(0%)' },
-            '100%': { transform: 'translateX(-50%)' },
-          },
-        }}
-      >
-        {children}
-        {children}
-      </Box>
-    </Box>
-  );
-}
+
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -326,31 +307,6 @@ export default function HomePage() {
         }} />
       </Box>
 
-      {/* ═══════════ SOCIAL PROOF MARQUEE ═══════════ */}
-      <Box sx={{ py: 3, bgcolor: '#fff', borderBottom: '1px solid', borderColor: 'divider', overflow: 'hidden' }}>
-        <Marquee speed={40}>
-          {[
-            '⭐ "Ga perlu nunggu lagi, langsung main!" — Rizky',
-            '🎱 "Booking cepet, meja langsung ready" — Andi',
-            '🏆 "Venue paling nyaman se-kota" — Dimas',
-            '⭐ "Sistemnya gampang banget, recommended!" — Sarah',
-            '🎱 "Meja VIP-nya juara, worth it!" — Kevin',
-            '🏆 "Tiap minggu booking di sini, ga pernah kecewa" — Fajar',
-          ].map((text, i) => (
-            <Typography
-              key={i}
-              variant="body2"
-              sx={{
-                display: 'inline-block', mx: 4,
-                color: 'text.secondary', fontWeight: 500, fontSize: '0.85rem',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {text}
-            </Typography>
-          ))}
-        </Marquee>
-      </Box>
 
       {/* ═══════════ STATS SECTION ═══════════ */}
       <Box sx={{ py: { xs: 6, md: 8 }, bgcolor: '#ffffff' }}>
