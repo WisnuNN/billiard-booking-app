@@ -61,7 +61,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     setAnchorEl(null);
     await logout();
-    navigate('/login');
+    navigate('/');
   };
 
   const filteredLinks = navLinks.filter((link) => !link.auth || token);

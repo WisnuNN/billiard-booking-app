@@ -13,6 +13,9 @@ import TableDetailPage from './pages/TableDetailPage';
 import BookingsPage from './pages/BookingsPage';
 import BookingDetailPage from './pages/BookingDetailPage';
 import ProfilePage from './pages/ProfilePage';
+import TermsPage from './pages/TermsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import HelpPage from './pages/HelpPage';
 
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminMonitorPage from './pages/admin/AdminMonitorPage';
@@ -35,6 +38,9 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/tables" element={<TablesPage />} />
         <Route path="/tables/:id" element={<TableDetailPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/help" element={<HelpPage />} />
         
         <Route element={<ProtectedRoute><RouteWrapper /></ProtectedRoute>}>
           <Route path="/bookings" element={<BookingsPage />} />

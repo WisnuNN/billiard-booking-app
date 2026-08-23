@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, Typography, Alert, InputAdornment, IconButton, Divider, Stack } from '@mui/material';
+import { Box, TextField, Button, Typography, Alert, InputAdornment, IconButton, Divider, Stack, Checkbox, FormControlLabel } from '@mui/material';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -22,6 +22,7 @@ export default function RegisterPage() {
     password_confirmation: '',
   });
   const [fieldErrors, setFieldErrors] = useState({});
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +53,7 @@ export default function RegisterPage() {
             <Typography variant="caption" sx={labelSx}>Nama Lengkap</Typography>
             <TextField
               fullWidth
-              placeholder="John Doe"
+              placeholder="Contoh: Budi Santoso"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
@@ -72,7 +73,7 @@ export default function RegisterPage() {
             <Typography variant="caption" sx={labelSx}>Nomor Telepon</Typography>
             <TextField
               fullWidth
-              placeholder="08xxxxxxxxxx"
+              placeholder="Contoh: 081234567890"
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               required
@@ -92,7 +93,7 @@ export default function RegisterPage() {
             <Typography variant="caption" sx={labelSx}>Email</Typography>
             <TextField
               fullWidth
-              placeholder="admin@billiard.com"
+              placeholder="Contoh: budi@email.com"
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -157,12 +158,39 @@ export default function RegisterPage() {
           </Box>
         </Stack>
 
+        <Box 
+          sx={{ 
+            mt: 3, 
+            mb: 1, 
+            p: 1.5, 
+            borderRadius: 3, 
+            bgcolor: termsAccepted ? 'rgba(13,150,104,0.05)' : 'rgba(255,255,255,0.02)', 
+            border: '1px solid', 
+            borderColor: termsAccepted ? 'rgba(13,150,104,0.3)' : 'rgba(255,255,255,0.08)',
+            transition: 'all 0.2s',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <Checkbox 
+            checked={termsAccepted} 
+            onChange={(e) => setTermsAccepted(e.target.checked)} 
+            sx={{ color: 'text.secondary', p: 0.5, mr: 1.5, '&.Mui-checked': { color: 'primary.main' } }} 
+          />
+          <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.8rem', lineHeight: 1.5 }}>
+            Saya setuju dengan{' '}
+            <Box component={Link} to="/terms" target="_blank" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 600, '&:hover': { textDecoration: 'underline' } }}>Syarat & Ketentuan</Box>
+            {' '}serta{' '}
+            <Box component={Link} to="/privacy" target="_blank" sx={{ color: 'primary.main', textDecoration: 'none', fontWeight: 600, '&:hover': { textDecoration: 'underline' } }}>Kebijakan Privasi</Box>
+          </Typography>
+        </Box>
+
         <Button
           type="submit"
           fullWidth
           variant="contained"
           size="large"
-          disabled={isLoading}
+          disabled={isLoading || !termsAccepted}
           endIcon={!isLoading && <ArrowForwardIcon />}
           sx={{ 
             mt: 4,

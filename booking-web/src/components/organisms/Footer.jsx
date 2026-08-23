@@ -203,11 +203,15 @@ export default function Footer() {
             © {new Date().getFullYear()} Baccarat Billiard & Lounge. Hak Cipta Dilindungi.
           </Typography>
           <Stack direction="row" spacing={2.5} sx={{ flexWrap: 'wrap', gap: 1.5 }}>
-            {['Syarat & Ketentuan', 'Kebijakan Privasi', 'Bantuan'].map((text) => (
+            {[
+              { label: 'Syarat & Ketentuan', path: '/terms' },
+              { label: 'Kebijakan Privasi', path: '/privacy' },
+              { label: 'Bantuan', path: '/help' },
+            ].map((item) => (
               <Box
-                component="a"
-                href="#"
-                key={text}
+                component={Link}
+                to={item.path}
+                key={item.label}
                 sx={{
                   color: '#64748b',
                   textDecoration: 'none',
@@ -218,7 +222,7 @@ export default function Footer() {
                   ml: '0 !important'
                 }}
               >
-                {text}
+                {item.label}
               </Box>
             ))}
           </Stack>
